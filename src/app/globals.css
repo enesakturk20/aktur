@@ -1,4 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #4d569c;
+  --color-text: #4D4A48;
+}
 
 :root {
   --background: #ffffff;
