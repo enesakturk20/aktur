@@ -73,7 +73,7 @@ export default function HeroSlider() {
   const slide = slides[currentSlide];
 
   return (
-    <section className="mt-100">
+    <section className="pt-55">
       {/* Arka plan görseli */}
       <div className="absolute inset-0">
         {slides.map((s, index) => (

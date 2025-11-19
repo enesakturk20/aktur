@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // Mobil menü
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -13,13 +13,15 @@ export default function Header() {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="Kayalar Turizm Logo"
-            width={250}
-            height={50}
-            priority
-          />
+          <div className="relative w-[200px] h-[65px] md:w-[250px] md:h-[65px]">
+            <Image
+              src="/logo.png"
+              alt="Aktur Turizm Logo"
+              fill
+              style={{ objectFit: "contain" }}
+              priority
+            />
+          </div>
         </Link>
 
         {/* Menü (masaüstü) */}
@@ -30,12 +32,12 @@ export default function Header() {
           >
             ANA SAYFA
           </Link>
-          <Link
+          {/*<Link
             href="/kurumsal"
             className="text-gray-700 hover:text-primary transition-colors font-medium"
           >
             KURUMSAL
-          </Link>
+          </Link>*/}
 
           {/* Dropdown */}
           <div className="relative group">
@@ -60,7 +62,7 @@ export default function Header() {
             <ul className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <li>
                 <Link
-                  href="/ulasim-cozumleri/okul-servis-tasimaciligi"
+                  href="/school-transport"
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
                   Okul Servis Taşımacılığı
@@ -68,7 +70,7 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/ulasim-cozumleri/personel-tasimaciligi"
+                  href="/staff-transport"
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
                   Personel Taşımacılığı
@@ -76,29 +78,44 @@ export default function Header() {
               </li>
               <li>
                 <Link
-                  href="/ulasim-cozumleri/ozel-transfer-hizmetleri"
+                  href="/vip-transfer"
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
-                  Özel Transfer Hizmetleri
+                  VIP Transfer Hizmetleri
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/ulasim-cozumleri/arac-kiralama"
+                  href="/car-rental"
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
                   Araç Kiralama
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/event-organization"
+                  className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
+                >
+                  Etkinlik ve Organizasyon
                 </Link>
               </li>
             </ul>
           </div>
 
           <Link
+            href="/sustainability"
+            className="text-gray-700 hover:text-primary transition-colors font-medium"
+          >
+            SÜRDÜRÜLEBİLİRLİK
+          </Link>
+
+          {/*<Link
             href="/bize-ulasin"
             className="text-gray-700 hover:text-primary transition-colors font-medium"
           >
             BİZE ULAŞIN
-          </Link>
+          </Link>*/}
         </nav>
 
         {/* Mobil menü butonu */}
@@ -143,56 +160,93 @@ export default function Header() {
             >
               ANA SAYFA
             </Link>
-            <Link
+            {/*<Link
               href="/kurumsal"
               className="text-gray-700 hover:text-primary font-medium"
               onClick={() => setMenuOpen(false)}
             >
               KURUMSAL
-            </Link>
+            </Link>*/}
 
             {/* Mobil Dropdown */}
-            <div className="flex flex-col items-center space-y-2">
-              <span className="text-gray-700 font-medium">
+            <div className="w-full text-center">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="text-gray-700 font-medium flex items-center justify-center w-full"
+              >
                 ULAŞIM ÇÖZÜMLERİ
-              </span>
-              <Link
-                href="/ulasim-cozumleri/okul-servis-tasimaciligi"
-                className="text-gray-700 hover:text-primary font-medium"
-                onClick={() => setMenuOpen(false)}
-              >
-                Okul Servis Taşımacılığı
-              </Link>
-              <Link
-                href="/ulasim-cozumleri/personel-tasimaciligi"
-                className="text-gray-700 hover:text-primary font-medium"
-                onClick={() => setMenuOpen(false)}
-              >
-                Personel Taşımacılığı
-              </Link>
-              <Link
-                href="/ulasim-cozumleri/ozel-transfer-hizmetleri"
-                className="text-gray-700 hover:text-primary font-medium"
-                onClick={() => setMenuOpen(false)}
-              >
-                Özel Transfer Hizmetleri
-              </Link>
-              <Link
-                href="/ulasim-cozumleri/arac-kiralama"
-                className="text-gray-700 hover:text-primary font-medium"
-                onClick={() => setMenuOpen(false)}
-              >
-                Araç Kiralama
-              </Link>
+                <svg
+                  className={`w-4 h-4 ml-1 transform transition-transform ${
+                    dropdownOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              {dropdownOpen && (
+                <div className="flex flex-col items-center space-y-2 mt-2 w-full bg-gray-50 py-2 rounded-md">
+                  <Link
+                    href="/school-transport"
+                    className="text-gray-600 hover:text-primary text-sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Okul Servis Taşımacılığı
+                  </Link>
+                  <Link
+                    href="/staff-transport"
+                    className="text-gray-600 hover:text-primary text-sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Personel Taşımacılığı
+                  </Link>
+                  <Link
+                    href="/vip-transfer"
+                    className="text-gray-600 hover:text-primary text-sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    VIP Transfer Hizmetleri
+                  </Link>
+                  <Link
+                    href="/car-rental"
+                    className="text-gray-600 hover:text-primary text-sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Araç Kiralama
+                  </Link>
+                  <Link
+                    href="/event-organization"
+                    className="text-gray-600 hover:text-primary text-sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Etkinlik ve Organizasyon
+                  </Link>
+                </div>
+              )}
             </div>
 
             <Link
+              href="/sustainability"
+              className="text-gray-700 hover:text-primary font-medium"
+              onClick={() => setMenuOpen(false)}
+            >
+              SÜRDÜRÜLEBİLİRLİK
+            </Link>
+
+            {/*<Link
               href="/bize-ulasin"
               className="text-gray-700 hover:text-primary font-medium"
               onClick={() => setMenuOpen(false)}
             >
               BİZE ULAŞIN
-            </Link>
+            </Link>*/}
           </nav>
         </div>
       )}
