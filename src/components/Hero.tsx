@@ -1,31 +1,23 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Metin dışındaki veriler burada kalabilir.
 const slideData = [
-  {
-    id: 1,
-    type: "ogrenci",
-    image: "/ogrenci-hero.png",
-  },
-  {
-    id: 2,
-    type: "personel",
-    image: "/per.png",
-  },
-  {
-    id: 3,
-    type: "vip",
-    image: "/vip-transfer.png",
-  },
+  { id: 1, type: "ogrenci", image: "/ogrenci-hero.png" },
+  { id: 2, type: "personel", image: "/per.png" },
+  { id: 3, type: "vip", image: "/vip-transfer.png" },
 ];
 
 interface HeroSliderProps {
   dictionary: {
-    slides: { badge: string; title: string; titleHighlight: string; description: string }[];
+    slides: {
+      badge: string;
+      title: string;
+      titleHighlight: string;
+      description: string;
+    }[];
   };
 }
 
@@ -33,40 +25,43 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const nextSlide = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide((prev) => (prev + 1) % slideData.length);
+    setTimeout(() => setIsAnimating(false), 500);
+  }, [isAnimating]);
+
+  const prevSlide = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide((prev) => (prev - 1 + slideData.length) % slideData.length);
+    setTimeout(() => setIsAnimating(false), 500);
+  }, [isAnimating]);
+
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (isAnimating || index === currentSlide) return;
+      setIsAnimating(true);
+      setCurrentSlide(index);
+      setTimeout(() => setIsAnimating(false), 500);
+    },
+    [isAnimating, currentSlide]
+  );
+
   useEffect(() => {
     const timer = setInterval(() => {
       nextSlide();
     }, 7000);
 
     return () => clearInterval(timer);
-  }, [currentSlide]);
+  }, [nextSlide]);
 
-  const nextSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentSlide((prev) => (prev + 1) % slideData.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
-
-  const prevSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentSlide((prev) => (prev - 1 + slideData.length) % slideData.length);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
-
-  const goToSlide = (index: number) => {
-    if (isAnimating || index === currentSlide) return;
-    setIsAnimating(true);
-    setCurrentSlide(index);
-    setTimeout(() => setIsAnimating(false), 500);
-  };
   const slideContent = dictionary.slides[currentSlide];
-  const slideLayout = slideData[currentSlide];
 
   return (
     <section className="pt-55">
-      {/* Arka plan görseli */}
+      {/* Background images */}
       <div className="absolute inset-0">
         {slideData.map((s, index) => (
           <div
@@ -92,7 +87,7 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
         ))}
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Navigation buttons */}
       <button
         onClick={prevSlide}
         disabled={isAnimating}
@@ -100,6 +95,7 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
       >
         <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white" />
       </button>
+
       <button
         onClick={nextSlide}
         disabled={isAnimating}
@@ -112,7 +108,9 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
       <div className="relative z-10 container mx-auto px-4 text-center md:text-left">
         <div
           className={`max-w-2xl transition-all duration-700 ${
-            isAnimating ? "opacity-0 translate-x-4 md:translate-x-8" : "opacity-100 translate-x-0"
+            isAnimating
+              ? "opacity-0 translate-x-4 md:translate-x-8"
+              : "opacity-100 translate-x-0"
           }`}
         >
           {/* Badge */}

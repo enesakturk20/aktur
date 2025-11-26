@@ -16,7 +16,7 @@ export default async function RootLayout({
   params,
 }: {
   children: ReactNode;
-  params: Promise<{ lang: Locale }>;
+    params: Promise<{ lang: Locale }>;
 }) {
   const resolvedParams = await params;
   const dictionary = await getDictionary(resolvedParams.lang);
@@ -27,7 +27,10 @@ export default async function RootLayout({
         <Header dictionary={dictionary.header} lang={resolvedParams.lang} />
         <main className="pt-22">{children}</main>
         <WhatsAppButton />
-        <Footer dictionary={{ header: dictionary.header, footer: dictionary.footer }} lang={resolvedParams.lang} />
+        <Footer
+          dictionary={{ header: dictionary.header, footer: dictionary.footer }}
+          lang={resolvedParams.lang}
+        />
       </body>
     </html>
   );
