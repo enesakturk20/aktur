@@ -12,7 +12,36 @@ import {
   Phone,
 } from "lucide-react";
 
-export default function Footer() {
+interface FooterProps {
+  dictionary: {
+    header: {
+      home: string;
+      transportSolutions: string;
+      schoolTransport: string;
+      staffTransport: string;
+      vipTransfer: string;
+      carRental: string;
+      eventOrganization: string;
+      sustainability: string;
+    };
+    footer: {
+      aboutTitle: string;
+      aboutDescription: string;
+      quickLinksTitle: string;
+      contactTitle: string;
+      phoneTitle: string;
+      emailTitle: string;
+      addressTitle: string;
+      addressValue: string;
+      copyright: string;
+      privacyPolicy: string;
+      termsOfUse: string;
+    };
+  };
+  lang: string;
+}
+
+export default function Footer({ dictionary, lang }: FooterProps) {
   return (
     <footer className="bg-white text-primary">
       {/* Ana Footer İçeriği */}
@@ -20,15 +49,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {/* Hakkımızda Bölümü */}
           <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">
-              HAKKIMIZDA
-            </h3>
+            <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">{dictionary.footer.aboutTitle}</h3>
             <p className="text-primary/80 text-sm md:text-base leading-relaxed">
-              Aktur Turizm, yıllarin verdiği deneyim ve güvenle ulaşım
-              sektöründe lider konumda olan bir firmadır. Okul servis
-              taşımacılığından personel taşımacılığına, özel transfer
-              hizmetlerinden araç kiralamaya kadar geniş bir hizmet yelpazesi
-              sunmaktayız.
+              {dictionary.footer.aboutDescription}
             </p>
 
             {/* Sosyal Medya İkonları */}
@@ -72,15 +95,13 @@ export default function Footer() {
 
           {/* Hızlı Bağlantılar */}
           <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">
-              HIZLI BAĞLANTILAR
-            </h3>
+            <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">{dictionary.footer.quickLinksTitle}</h3>
             <nav className="flex flex-col space-y-3">
               <Link
-                href="/"
+                href={`/${lang}`}
                 className="text-primary hover:text-primary/70 transition-colors duration-300 text-sm md:text-base hover:translate-x-2 inline-block"
               >
-                ANA SAYFA
+                {dictionary.header.home}
               </Link>
               {/*<Link
                 href="/kurumsal"
@@ -90,44 +111,44 @@ export default function Footer() {
               </Link>*/}
               <div className="space-y-2 pl-4">
                 <p className="text-primary/70 text-sm md:text-base font-semibold">
-                  ULAŞIM ÇÖZÜMLERİ
+                  {dictionary.header.transportSolutions}
                 </p>
                 <Link
-                  href="/school-transport"
+                  href={`/${lang}/school-transport`}
                   className="block text-primary hover:text-primary/70 transition-colors duration-300 text-sm hover:translate-x-2"
                 >
-                  • Okul Servis Taşımacılığı
+                  • {dictionary.header.schoolTransport}
                 </Link>
                 <Link
-                  href="/staff-transport"
+                  href={`/${lang}/staff-transport`}
                   className="block text-primary hover:text-primary/70 transition-colors duration-300 text-sm hover:translate-x-2"
                 >
-                  • Personel Taşımacılığı
+                  • {dictionary.header.staffTransport}
                 </Link>
                 <Link
-                  href="/vip-transfer"
+                  href={`/${lang}/vip-transfer`}
                   className="block text-primary hover:text-primary/70 transition-colors duration-300 text-sm hover:translate-x-2"
                 >
-                  • VIP Transfer Hizmetleri
+                  • {dictionary.header.vipTransfer}
                 </Link>
                 <Link
-                  href="/car-rental"
+                  href={`/${lang}/car-rental`}
                   className="block text-primary hover:text-primary/70 transition-colors duration-300 text-sm hover:translate-x-2"
                 >
-                  • Araç Kiralama
+                  • {dictionary.header.carRental}
                 </Link>
                 <Link
-                  href="/event-organization"
+                  href={`/${lang}/event-organization`}
                   className="block text-primary hover:text-primary/70 transition-colors duration-300 text-sm hover:translate-x-2"
                 >
-                  • Etkinlik ve Organizasyon
+                  • {dictionary.header.eventOrganization}
                 </Link>
               </div>
               <Link
-                href="/sustainability"
+                href={`/${lang}/sustainability`}
                 className="text-primary hover:text-primary/70 transition-colors duration-300 text-sm md:text-base hover:translate-x-2 inline-block"
               >
-                SÜRDÜRÜLEBİLİRLİK
+                {dictionary.header.sustainability}
               </Link>
               {/*<Link
                 href="/bize-ulasin"
@@ -151,13 +172,13 @@ export default function Footer() {
               />
             </div>
 
-            <h3 className="text-xl md:text-2xl font-bold">İLETİŞİM</h3>
+            <h3 className="text-xl md:text-2xl font-bold">{dictionary.footer.contactTitle}</h3>
 
             <div className="space-y-4 text-sm md:text-base">
               <div className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-primary">Telefon</p>
+                  <p className="font-semibold text-primary">{dictionary.footer.phoneTitle}</p>
                   <a
                     href="tel:05535042085"
                     className="text-primary/80 hover:text-primary transition-colors"
@@ -170,12 +191,12 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-primary">E-posta</p>
+                  <p className="font-semibold text-primary">{dictionary.footer.emailTitle}</p>
                   <a
-                    href="mailto:info@aktur.org"
+                    href="mailto:info@akturtourism.com"
                     className="text-primary/80 hover:text-primary transition-colors break-all"
                   >
-                    info@aktur.org
+                    info@akturtourism.com
                   </a>
                 </div>
               </div>
@@ -183,14 +204,14 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold text-primary">Adres</p>
+                  <p className="font-semibold text-primary">{dictionary.footer.addressTitle}</p>
                   <a
                     href="https://www.google.com/maps/search/?api=1&query=Hasanpaşa+Mah.+Ahmet+Rasim+Sk.+No:13/3+Kadiköy/İstanbul,+Türkiye"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary/80 leading-relaxed hover:text-primary transition-colors"
                   >
-                    Hasanpaşa Mah. Ahmet Rasim Sk. No:13/3 Kadiköy/İstanbul, Türkiye
+                    {dictionary.footer.addressValue}
                   </a>
                 </div>
               </div>
@@ -204,20 +225,20 @@ export default function Footer() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary/70">
             <p className="text-center md:text-left">
-              © {new Date().getFullYear()} Aktur Turizm. Tüm hakları saklıdır.
+              {dictionary.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
             </p>
             <div className="flex gap-6">
               <Link
-                href="/gizlilik-politikasi"
+                href={`/${lang}/privacy-policy`}
                 className="hover:text-primary transition-colors"
               >
-                Gizlilik Politikası
+                {dictionary.footer.privacyPolicy}
               </Link>
               <Link
-                href="/kullanim-kosullari"
+                href={`/${lang}/terms-of-use`}
                 className="hover:text-primary transition-colors"
               >
-                Kullanım Koşulları
+                {dictionary.footer.termsOfUse}
               </Link>
             </div>
           </div>

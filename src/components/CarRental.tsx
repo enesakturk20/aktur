@@ -2,7 +2,16 @@
 
 import React from "react";
 
-const CarRental = () => {
+interface CarRentalProps {
+  dictionary: {
+    title: string;
+    paragraph1: string;
+    paragraph2: string;
+    imageAlt: string;
+  };
+}
+
+const CarRental = ({ dictionary }: CarRentalProps) => {
   return (
     <div className="min-h-screen bg-primary text-white">
       {/* Hero Section with Image */}
@@ -12,7 +21,7 @@ const CarRental = () => {
           <div className="mt-10 lg:mt-40 px-4 lg:px-0">
             <img
               src="/arac-kiralama.jpg"
-              alt="Araç Kiralama Hizmetleri"
+              alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"
             />
           </div>
@@ -20,16 +29,16 @@ const CarRental = () => {
           {/* Right - Content */}
           <div className="bg-white p-8 lg:p-16 flex flex-col justify-center mt-8 lg:mt-40 mb-10 rounded-xl shadow-lg lg:shadow-none mx-4 lg:mx-0">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Araç Kiralama
+              {dictionary.title}
             </h1>
             
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p>
-                Özgürlüğün tadını Aktur Turizm'in geniş araç filosuyla çıkarın. İster iş seyahatleriniz, ister tatil planlarınız için, her ihtiyaca uygun, modern ve bakımlı araçlarımızla hizmetinizdeyiz. Şoförlü veya şoförsüz kiralama seçenekleriyle esnek ve güvenilir çözümler sunuyoruz.
+                {dictionary.paragraph1}
               </p>
 
               <p>
-                Geniş araç yelpazemiz, rekabetçi fiyatlarımız ve müşteri odaklı hizmetimizle, yolculuk planlarınızı kolaylaştırıyoruz. İhtiyacınız olan aracı seçin ve gerisini bize bırakın.
+                {dictionary.paragraph2}
               </p>
             </div>
           </div>

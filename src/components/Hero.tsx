@@ -4,40 +4,32 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const slides = [
+// Metin dışındaki veriler burada kalabilir.
+const slideData = [
   {
     id: 1,
     type: "ogrenci",
     image: "/ogrenci-hero.png",
-    badge: "ÖĞRENCİ TAŞIMACILIĞI",
-    title: "Konforlu ve Güvenli",
-    titleHighlight: "Ulaşım Hizmetleri",
-    description:
-      "Öğrenci transferleriniz için profesyonel çözümler sunuyoruz. Araçlarımız ve deneyimli personelimiz ile güvenli yolculuk.",
   },
   {
     id: 2,
     type: "personel",
     image: "/per.png",
-    badge: "PERSONEL TAŞIMACILIĞI",
-    title: "İş Gücünüz İçin",
-    titleHighlight: "Güvenilir Çözüm",
-    description:
-      "Şirketinizin çalışanları için düzenli, güvenli ve konforlu servis hizmeti. Modern araç filomuzu ve profesyonel ekibimiz ile personel taşımacılığında uzman çözümler sunuyoruz.",
   },
   {
     id: 3,
     type: "vip",
     image: "/vip-transfer.png",
-    badge: "VIP TRANSFER",
-    title: "Lüks ve Konforlu",
-    titleHighlight: "VIP Ulaşım",
-    description:
-      "Özel misafirleriniz ve üst düzey yöneticileriniz için lüks araçlarla VIP transfer hizmeti. Prestijli ve konforlu yolculuk deneyimi.",
   },
 ];
 
-export default function HeroSlider() {
+interface HeroSliderProps {
+  dictionary: {
+    slides: { badge: string; title: string; titleHighlight: string; description: string }[];
+  };
+}
+
+export default function HeroSlider({ dictionary }: HeroSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -52,14 +44,14 @@ export default function HeroSlider() {
   const nextSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => (prev + 1) % slideData.length);
     setTimeout(() => setIsAnimating(false), 500);
   };
 
   const prevSlide = () => {
     if (isAnimating) return;
     setIsAnimating(true);
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide((prev) => (prev - 1 + slideData.length) % slideData.length);
     setTimeout(() => setIsAnimating(false), 500);
   };
 
@@ -69,14 +61,14 @@ export default function HeroSlider() {
     setCurrentSlide(index);
     setTimeout(() => setIsAnimating(false), 500);
   };
-
-  const slide = slides[currentSlide];
+  const slideContent = dictionary.slides[currentSlide];
+  const slideLayout = slideData[currentSlide];
 
   return (
     <section className="pt-55">
       {/* Arka plan görseli */}
       <div className="absolute inset-0">
-        {slides.map((s, index) => (
+        {slideData.map((s, index) => (
           <div
             key={s.id}
             className={`absolute inset-0 transition-opacity duration-700 ${
@@ -85,7 +77,7 @@ export default function HeroSlider() {
           >
             <Image
               src={s.image}
-              alt={s.badge}
+              alt={dictionary.slides[index].badge}
               fill
               className="object-cover"
             />
@@ -126,26 +118,26 @@ export default function HeroSlider() {
           {/* Badge */}
           <div className="inline-block mb-3 md:mb-4">
             <span className="bg-primary text-white px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold tracking-wide">
-              {slide.badge}
+              {slideContent.badge}
             </span>
           </div>
 
           {/* Title */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-snug">
-            {slide.title}
-            <span className="block text-white">{slide.titleHighlight}</span>
+            {slideContent.title}
+            <span className="block text-white">{slideContent.titleHighlight}</span>
           </h1>
 
           {/* Description */}
           <p className="text-sm md:text-lg text-gray-200 mb-6 md:mb-8 leading-relaxed">
-            {slide.description}
+            {slideContent.description}
           </p>
         </div>
       </div>
 
       {/* Slide Indicators */}
       <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2 md:gap-3">
-        {slides.map((_, index) => (
+        {slideData.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

@@ -2,7 +2,16 @@
 
 import React from "react";
 
-const EventOrganization = () => {
+interface EventOrganizationProps {
+  dictionary: {
+    title: string;
+    paragraph1: string;
+    paragraph2: string;
+    imageAlt: string;
+  };
+}
+
+const EventOrganization = ({ dictionary }: EventOrganizationProps) => {
   return (
     <div className="min-h-screen bg-primary text-white">
       {/* Hero Section with Image */}
@@ -12,7 +21,7 @@ const EventOrganization = () => {
           <div className="mt-10 lg:mt-20 px-4 lg:px-0">
             <img
               src="/etkinlik-organizasyon.jpg"
-              alt="Etkinlik ve Organizasyon Taşımacılığı"
+              alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"
             />
           </div>
@@ -20,16 +29,16 @@ const EventOrganization = () => {
           {/* Right - Content */}
           <div className="bg-white p-8 lg:p-16 flex flex-col justify-center mt-8 lg:mt-25 mb-10 rounded-xl shadow-lg lg:shadow-none mx-4 lg:mx-0">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Etkinlik ve Organizasyon Taşımacılığı
+              {dictionary.title}
             </h1>
             
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p>
-                Düğün, seminer, fuar, spor etkinlikleri veya özel davetleriniz... Aktur Turizm, her türlü etkinlik ve organizasyon için profesyonel ulaşım çözümleri sunar. Katılımcılarınızın konforlu ve zamanında etkinlik alanına ulaşmasını sağlayarak organizasyonunuzun başarısına katkıda bulunuyoruz.
+                {dictionary.paragraph1}
               </p>
 
               <p>
-                Geniş araç filomuz ve deneyimli operasyon ekibimizle, küçük gruplardan büyük kalabalıklara kadar her ölçekteki ihtiyaca cevap veriyoruz. Lojistik planlamayı bize bırakın, siz etkinliğinize odaklanın.
+                {dictionary.paragraph2}
               </p>
             </div>
           </div>

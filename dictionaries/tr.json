@@ -1,0 +1,101 @@
+{
+  "header": {
+    "home": "ANA SAYFA",
+    "transportSolutions": "ULAŞIM ÇÖZÜMLERİ",
+    "schoolTransport": "Okul Servis Taşımacılığı",
+    "staffTransport": "Personel Taşımacılığı",
+    "vipTransfer": "VIP Transfer Hizmetleri",
+    "carRental": "Araç Kiralama",
+    "eventOrganization": "Etkinlik ve Organizasyon",
+    "sustainability": "SÜRDÜRÜLEBİLİRLİK"
+  },
+  "transportServices": {
+    "title": "Taşımacılık Hizmetlerimiz",
+    "description": "Geniş araç filomuz ve deneyimli kadromuzla tüm kurumsal taşımacılık ihtiyaçlarınız için yanınızdayız.",
+    "serviceList": [
+      { "title": "Öğrenci Taşımacılığı", "alt": "Öğrenci Taşımacılığı" },
+      { "title": "Personel Taşımacılığı", "alt": "Personel Taşımacılığı" },
+      { "title": "VIP Transfer Çözümleri", "alt": "VIP Transfer Çözümleri" },
+      {
+        "title": "Araç Kiralama Hizmetleri",
+        "alt": "Araç Kiralama Hizmetleri"
+      },
+      {
+        "title": "Etkinlik ve Organizasyon Taşımacılığı",
+        "alt": "Etkinlik ve Organizasyon Taşımacılığı"
+      }
+    ]
+  },
+  "footer": {
+    "aboutTitle": "HAKKIMIZDA",
+    "aboutDescription": "Aktur Turizm, yıllarin verdiği deneyim ve güvenle ulaşım sektöründe lider konumda olan bir firmadır. Okul servis taşımacılığından personel taşımacılığına, özel transfer hizmetlerinden araç kiralamaya kadar geniş bir hizmet yelpazesi sunmaktayız.",
+    "quickLinksTitle": "HIZLI BAĞLANTILAR",
+    "contactTitle": "İLETİŞİM",
+    "phoneTitle": "Telefon",
+    "emailTitle": "E-posta",
+    "addressTitle": "Adres",
+    "addressValue": "Hasanpaşa Mah. Ahmet Rasim Sk. No:13/3 Kadiköy/İstanbul, Türkiye",
+    "copyright": "© {year} Aktur Turizm. Tüm hakları saklıdır.",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfUse": "Kullanım Koşulları"
+  },
+  "heroSlider": {
+    "slides": [
+      {
+        "badge": "ÖĞRENCİ TAŞIMACILIĞI",
+        "title": "Konforlu ve Güvenli",
+        "titleHighlight": "Ulaşım Hizmetleri",
+        "description": "Öğrenci transferleriniz için profesyonel çözümler sunuyoruz. Araçlarımız ve deneyimli personelimiz ile güvenli yolculuk."
+      },
+      {
+        "badge": "PERSONEL TAŞIMACILIĞI",
+        "title": "İş Gücünüz İçin",
+        "titleHighlight": "Güvenilir Çözüm",
+        "description": "Şirketinizin çalışanları için düzenli, güvenli ve konforlu servis hizmeti. Modern araç filomuzu ve profesyonel ekibimiz ile personel taşımacılığında uzman çözümler sunuyoruz."
+      },
+      {
+        "badge": "VIP TRANSFER",
+        "title": "Lüks ve Konforlu",
+        "titleHighlight": "VIP Ulaşım",
+        "description": "Özel misafirleriniz ve üst düzey yöneticileriniz için lüks araçlarla VIP transfer hizmeti. Prestijli ve konforlu yolculuk deneyimi."
+      }
+    ]
+  },
+  "vipTransferPage": {
+    "title": "VIP Transfer Hizmetleri",
+    "paragraph1": "Aktur Turizm ile seyahatlerinizi ayrıcalıklı bir deneyime dönüştürün. VIP transfer hizmetlerimizle, lüks ve konforlu araçlarımızda, profesyonel şoförlerimiz eşliğinde size özel bir yolculuk sunuyoruz. Havaalanı transferleri, iş toplantıları veya özel günleriniz için prestijli bir ulaşım çözümü sağlıyoruz.",
+    "paragraph2": "Her detayın düşünüldüğü hizmet anlayışımızla, yolculuğunuzun başından sonuna kadar kendinizi özel hissetmenizi sağlıyoruz. Güvenlik, gizlilik ve konfor önceliklerimizdir.",
+    "imageAlt": "VIP Transfer Hizmetleri"
+  },
+  "carRentalPage": {
+    "title": "Araç Kiralama",
+    "paragraph1": "Özgürlüğün tadını Aktur Turizm'in geniş araç filosuyla çıkarın. İster iş seyahatleriniz, ister tatil planlarınız için, her ihtiyaca uygun, modern ve bakımlı araçlarımızla hizmetinizdeyiz. Şoförlü veya şoförsüz kiralama seçenekleriyle esnek ve güvenilir çözümler sunuyoruz.",
+    "paragraph2": "Geniş araç yelpazemiz, rekabetçi fiyatlarımız ve müşteri odaklı hizmetimizle, yolculuk planlarınızı kolaylaştırıyoruz. İhtiyacınız olan aracı seçin ve gerisini bize bırakın.",
+    "imageAlt": "Araç Kiralama Hizmetleri"
+  },
+  "eventOrganizationPage": {
+    "title": "Etkinlik ve Organizasyon Taşımacılığı",
+    "paragraph1": "Düğün, seminer, fuar, spor etkinlikleri veya özel davetleriniz... Aktur Turizm, her türlü etkinlik ve organizasyon için profesyonel ulaşım çözümleri sunar. Katılımcılarınızın konforlu ve zamanında etkinlik alanına ulaşmasını sağlayarak organizasyonunuzun başarısına katkıda bulunuyoruz.",
+    "paragraph2": "Geniş araç filomuz ve deneyimli operasyon ekibimizle, küçük gruplardan büyük kalabalıklara kadar her ölçekteki ihtiyaca cevap veriyoruz. Lojistik planlamayı bize bırakın, siz etkinliğinize odaklanın.",
+    "imageAlt": "Etkinlik ve Organizasyon Taşımacılığı"
+  },
+  "schoolTransportPage": {
+    "title": "Okul Servis Taşımacılığı",
+    "paragraph1": "Aktur Turizm, öğrenci taşımacılığında güvenliği, konforu ve zamanında ulaşımı ön planda tutarak, okul servis taşımacılığında sektördeki liderliğini sürdürmektedir. Gelişmiş araç filomuz, deneyimli şoför kadromuz ve öğrenci odaklı yaklaşımımızla, her gün binlerce öğrencinin güvenli ve rahat bir şekilde okullarına ulaşmasını sağlıyoruz.",
+    "paragraph2": "Aktur Turizm olarak, eğitim hayatındaki her adımda öğrencilere en iyi ulaşım deneyimini sağlamak için var gücümüzle çalışıyoruz.",
+    "imageAlt": "Okul Servisleri"
+  },
+  "staffTransportPage": {
+    "title": "Personel Taşımacılığı",
+    "paragraph1": "Aktur Turizm, personel taşımacılığında güvenliği, konforu ve dakikliği ön planda tutarak, çalışanların işlerine zamanında ve sorunsuz bir şekilde ulaşmalarını hedefler. Gelişmiş araç filomuz, deneyimli şoför kadromuz ve müşteri odaklı yaklaşımımızla, her gün binlerce çalışanın güvenli ve konforlu bir şekilde iş yerlerine ulaşımını sağlıyoruz.",
+    "paragraph2": "Siz işinize odaklanırken, Aktur Turizm olarak biz, çalışanlarınızın ulaşımını güvenilir ve konforlu bir deneyime dönüştürerek şirketinize değer katıyoruz.",
+    "imageAlt": "Personel Servisleri"
+  },
+  "sustainabilityPage": {
+    "title": "Sürdürülebilirlik",
+    "paragraph1": "Aktur Turizm olarak, çevreye duyarlı ve sürdürülebilir ulaşım çözümleri sunma konusunda güçlü bir sorumluluk taşıyoruz. Faaliyetlerimizi çevre dostu bir yaklaşım benimseyerek sürdürmekte, ekolojik ayak izimizi azaltmak için sürekli olarak yenilikçi çözümler arıyoruz.",
+    "paragraph2": "Modern araç filomuz, düşük emisyonlu ve yakıt verimliliği yüksek araçlarla güçlendirilmiştir. Bu sayede, hem çevremizi koruyor hem de müşterilerimize daha az karbon salınımıyla seyahat etme imkanı sunuyoruz.",
+    "paragraph3": "Sürdürülebilirlik, yalnızca çevreyle sınırlı kalmıyor. Aktur Turizm olarak, sosyal sorumluluk projelerinde yer alıyor, yerel ekonomilere katkı sağlıyor ve çalışanlarımızın refahını da ön planda tutuyoruz. Gelecek nesillere daha yaşanabilir bir dünya bırakmak için, tüm hizmetlerimizi çevresel ve toplumsal sorumluluk bilinciyle sunmaya devam edeceğiz.",
+    "imageAlt": "Sürdürülebilirlik"
+  }
+}

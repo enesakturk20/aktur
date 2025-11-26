@@ -2,7 +2,16 @@
 
 import React from "react";
 
-const StaffTransport = () => {
+interface StaffTransportProps {
+  dictionary: {
+    title: string;
+    paragraph1: string;
+    paragraph2: string;
+    imageAlt: string;
+  };
+}
+
+const StaffTransport = ({ dictionary }: StaffTransportProps) => {
   return (
     <div className="min-h-screen bg-primary text-white">
       {/* Hero Section with Image */}
@@ -12,7 +21,7 @@ const StaffTransport = () => {
           <div className="mt-10 lg:mt-40 px-4 lg:px-0">
             <img
               src="/personel-tasima.jpg"
-              alt="Personel Servisleri"
+              alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"
             />
           </div>
@@ -20,23 +29,16 @@ const StaffTransport = () => {
           {/* Right - Content */}
           <div className="bg-white p-8 lg:p-16 flex flex-col justify-center mt-8 lg:mt-40 mb-10 rounded-xl shadow-lg lg:shadow-none mx-4 lg:mx-0">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Personel Taşımacılığı
+              {dictionary.title}
             </h1>
             
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p>
-                Aktur Turizm, personel taşımacılığında güvenliği, konforu ve
-                dakikliği ön planda tutarak, çalışanların işlerine zamanında ve
-                sorunsuz bir şekilde ulaşmalarını hedefler. Gelişmiş araç
-                filomuz, deneyimli şoför kadromuz ve müşteri odaklı
-                yaklaşımımızla, her gün binlerce çalışanın güvenli ve konforlu
-                bir şekilde iş yerlerine ulaşımını sağlıyoruz.
+                {dictionary.paragraph1}
               </p>
 
               <p>
-                Siz işinize odaklanırken, Aktur Turizm olarak biz,
-                çalışanlarınızın ulaşımını güvenilir ve konforlu bir deneyime
-                dönüştürerek şirketinize değer katıyoruz.
+                {dictionary.paragraph2}
               </p>
             </div>
           </div>

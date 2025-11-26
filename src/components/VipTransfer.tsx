@@ -2,7 +2,17 @@
 
 import React from "react";
 
-const VipTransfer = () => {
+// Bileşenin alacağı prop'ların tipini tanımlıyoruz
+interface VipTransferProps {
+  dictionary: {
+    title: string;
+    paragraph1: string;
+    paragraph2: string;
+    imageAlt: string;
+  };
+}
+
+const VipTransfer = ({ dictionary }: VipTransferProps) => {
   return (
     <div className="min-h-screen bg-primary text-white">
       {/* Hero Section with Image */}
@@ -12,7 +22,7 @@ const VipTransfer = () => {
           <div className="mt-10 lg:mt-40 px-4 lg:px-0">
             <img
               src="/vip-transfer.jpg"
-              alt="VIP Transfer Hizmetleri"
+              alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"
             />
           </div>
@@ -20,16 +30,16 @@ const VipTransfer = () => {
           {/* Right - Content */}
           <div className="bg-white p-8 lg:p-16 flex flex-col justify-center mt-8 lg:mt-40 mb-10 rounded-xl shadow-lg lg:shadow-none mx-4 lg:mx-0">
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              VIP Transfer Hizmetleri
+              {dictionary.title}
             </h1>
             
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p>
-                Aktur Turizm ile seyahatlerinizi ayrıcalıklı bir deneyime dönüştürün. VIP transfer hizmetlerimizle, lüks ve konforlu araçlarımızda, profesyonel şoförlerimiz eşliğinde size özel bir yolculuk sunuyoruz. Havaalanı transferleri, iş toplantıları veya özel günleriniz için prestijli bir ulaşım çözümü sağlıyoruz.
+                {dictionary.paragraph1}
               </p>
 
               <p>
-                Her detayın düşünüldüğü hizmet anlayışımızla, yolculuğunuzun başından sonuna kadar kendinizi özel hissetmenizi sağlıyoruz. Güvenlik, gizlilik ve konfor önceliklerimizdir.
+                {dictionary.paragraph2}
               </p>
             </div>
           </div>

@@ -3,8 +3,24 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import LanguageSwitcher from "../app/[lang]/LanguageSwitcher";
 
-export default function Header() {
+// Bileşenin alacağı prop'lar için tip tanımı
+interface HeaderProps {
+  dictionary: {
+    home: string;
+    transportSolutions: string;
+    schoolTransport: string;
+    staffTransport: string;
+    vipTransfer: string;
+    carRental: string;
+    eventOrganization: string;
+    sustainability: string;
+  };
+  lang: string; // Dil parametresini prop olarak ekliyoruz
+}
+
+export default function Header({ dictionary, lang }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false); // Mobil menü
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -12,7 +28,7 @@ export default function Header() {
     <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
+        <Link href={`/${lang}`} className="flex items-center">
           <div className="relative w-[200px] h-[65px] md:w-[250px] md:h-[65px]">
             <Image
               src="/logo.png"
@@ -27,10 +43,10 @@ export default function Header() {
         {/* Menü (masaüstü) */}
         <nav className="hidden md:flex space-x-8 items-center">
           <Link
-            href="/"
+            href={`/${lang}`}
             className="text-gray-700 hover:text-primary transition-colors font-medium"
           >
-            ANA SAYFA
+            {dictionary.home}
           </Link>
           {/*<Link
             href="/kurumsal"
@@ -42,7 +58,7 @@ export default function Header() {
           {/* Dropdown */}
           <div className="relative group">
             <button className="text-gray-700 hover:text-primary transition-colors font-medium flex items-center">
-              ULAŞIM ÇÖZÜMLERİ
+              {dictionary.transportSolutions}
               <svg
                 className="w-4 h-4 ml-1"
                 fill="none"
@@ -62,53 +78,55 @@ export default function Header() {
             <ul className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <li>
                 <Link
-                  href="/school-transport"
+                  href={`/${lang}/school-transport`}
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
-                  Okul Servis Taşımacılığı
+                  {dictionary.schoolTransport}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/staff-transport"
+                  href={`/${lang}/staff-transport`}
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
-                  Personel Taşımacılığı
+                  {dictionary.staffTransport}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/vip-transfer"
+                  href={`/${lang}/vip-transfer`}
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
-                  VIP Transfer Hizmetleri
+                  {dictionary.vipTransfer}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/car-rental"
+                  href={`/${lang}/car-rental`}
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
-                  Araç Kiralama
+                  {dictionary.carRental}
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/event-organization"
+                  href={`/${lang}/event-organization`}
                   className="block px-4 py-2 text-gray-800 hover:bg-primary hover:text-white"
                 >
-                  Etkinlik ve Organizasyon
+                  {dictionary.eventOrganization}
                 </Link>
               </li>
             </ul>
           </div>
 
           <Link
-            href="/sustainability"
+            href={`/${lang}/sustainability`}
             className="text-gray-700 hover:text-primary transition-colors font-medium"
           >
-            SÜRDÜRÜLEBİLİRLİK
+            {dictionary.sustainability}
           </Link>
+
+          <LanguageSwitcher />
 
           {/*<Link
             href="/bize-ulasin"
@@ -154,11 +172,11 @@ export default function Header() {
         <div className="md:hidden bg-white shadow-lg border-t border-gray-100">
           <nav className="flex flex-col items-center space-y-4 py-4">
             <Link
-              href="/"
+              href={`/${lang}`}
               className="text-gray-700 hover:text-primary font-medium"
               onClick={() => setMenuOpen(false)}
             >
-              ANA SAYFA
+              {dictionary.home}
             </Link>
             {/*<Link
               href="/kurumsal"
@@ -174,7 +192,7 @@ export default function Header() {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="text-gray-700 font-medium flex items-center justify-center w-full"
               >
-                ULAŞIM ÇÖZÜMLERİ
+                {dictionary.transportSolutions}
                 <svg
                   className={`w-4 h-4 ml-1 transform transition-transform ${
                     dropdownOpen ? "rotate-180" : ""
@@ -194,50 +212,50 @@ export default function Header() {
               {dropdownOpen && (
                 <div className="flex flex-col items-center space-y-2 mt-2 w-full bg-gray-50 py-2 rounded-md">
                   <Link
-                    href="/school-transport"
+                    href={`/${lang}/school-transport`}
                     className="text-gray-600 hover:text-primary text-sm"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Okul Servis Taşımacılığı
+                    {dictionary.schoolTransport}
                   </Link>
                   <Link
-                    href="/staff-transport"
+                    href={`/${lang}/staff-transport`}
                     className="text-gray-600 hover:text-primary text-sm"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Personel Taşımacılığı
+                    {dictionary.staffTransport}
                   </Link>
                   <Link
-                    href="/vip-transfer"
+                    href={`/${lang}/vip-transfer`}
                     className="text-gray-600 hover:text-primary text-sm"
                     onClick={() => setMenuOpen(false)}
                   >
-                    VIP Transfer Hizmetleri
+                    {dictionary.vipTransfer}
                   </Link>
                   <Link
-                    href="/car-rental"
+                    href={`/${lang}/car-rental`}
                     className="text-gray-600 hover:text-primary text-sm"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Araç Kiralama
+                    {dictionary.carRental}
                   </Link>
                   <Link
-                    href="/event-organization"
+                    href={`/${lang}/event-organization`}
                     className="text-gray-600 hover:text-primary text-sm"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Etkinlik ve Organizasyon
+                    {dictionary.eventOrganization}
                   </Link>
                 </div>
               )}
             </div>
 
             <Link
-              href="/sustainability"
+              href={`/${lang}/sustainability`}
               className="text-gray-700 hover:text-primary font-medium"
               onClick={() => setMenuOpen(false)}
             >
-              SÜRDÜRÜLEBİLİRLİK
+              {dictionary.sustainability}
             </Link>
 
             {/*<Link
@@ -248,6 +266,10 @@ export default function Header() {
               BİZE ULAŞIN
             </Link>*/}
           </nav>
+          {/* Mobil Menü Dil Değiştirici */}
+          <div className="border-t border-gray-100 py-4 flex justify-center">
+            <LanguageSwitcher />
+          </div>
         </div>
       )}
     </header>
