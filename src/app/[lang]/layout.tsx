@@ -1,14 +1,14 @@
-import './globals.css';
-import Header from '@/components/Header';
-import WhatsAppButton from '../../../public/icons/WhatsAppButton';
-import type { ReactNode } from 'react';
-import Footer from '@/components/Footer';
-import { getDictionary } from './get-dictionary';
-import { Locale } from './i18n-config';
+import "./globals.css";
+import Header from "@/components/Header";
+import WhatsAppButton from "../../../public/icons/WhatsAppButton";
+import type { ReactNode } from "react";
+import Footer from "@/components/Footer";
+import { getDictionary } from "./get-dictionary";
+import { Locale } from "./i18n-config";
 
 export const metadata = {
-  title: 'Aktur Turizm',
-  description: 'Kurumsal Turizm Çözümleri',
+  title: "Aktur Turizm",
+  description: "Kurumsal Turizm Çözümleri",
 };
 
 export default async function RootLayout({
@@ -16,20 +16,20 @@ export default async function RootLayout({
   params,
 }: {
   children: ReactNode;
-  params: { lang: Locale }; // Promise'i kaldırın
+  params: Promise<{ lang: Locale }>; // Promise olarak değiştirin
 }) {
-  // params artık direkt olarak kullanılabilir, await'e gerek yok
-  const dictionary = await getDictionary(params.lang);
+  const resolvedParams = await params; // await ekleyin
+  const dictionary = await getDictionary(resolvedParams.lang);
 
   return (
-    <html lang={params.lang}>
+    <html lang={resolvedParams.lang}>
       <body>
-        <Header dictionary={dictionary.header} lang={params.lang} />
+        <Header dictionary={dictionary.header} lang={resolvedParams.lang} />
         <main className="pt-22">{children}</main>
         <WhatsAppButton />
         <Footer
           dictionary={{ header: dictionary.header, footer: dictionary.footer }}
-          lang={params.lang}
+          lang={resolvedParams.lang}
         />
       </body>
     </html>
