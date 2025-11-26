@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 interface SchoolTransportProps {
   dictionary: {
@@ -19,7 +20,7 @@ const SchoolTransport = ({ dictionary }: SchoolTransportProps) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 max-w-7xl mx-auto lg:items-center">
           {/* Left - Image */}
           <div className="mt-10 lg:mt-40 px-4 lg:px-0">
-            <img
+            <Image
               src="/ogrenci-tasimaciligi.jpg"
               alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"

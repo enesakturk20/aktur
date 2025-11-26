@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image"
 
 interface TransportServicesProps {
   dictionary: {
@@ -60,7 +61,7 @@ const TransportServices = ({ dictionary, lang }: TransportServicesProps) => {
                 }`}
               >
                 {/* Resim */}
-                <img
+                <Image
                   src={service.image}
                   alt={dictionary.serviceList[index].alt} // Metni dictionary'den al
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
