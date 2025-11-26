@@ -16,20 +16,19 @@ export default async function RootLayout({
   params,
 }: {
   children: ReactNode;
-    params: Promise<{ lang: Locale }>;
+  params: { lang: Locale }; // ✅ Promise değil
 }) {
-  const resolvedParams = await params;
-  const dictionary = await getDictionary(resolvedParams.lang);
+  const dictionary = await getDictionary(params.lang);
 
   return (
-    <html lang={resolvedParams.lang}>
+    <html lang={params.lang}>
       <body>
-        <Header dictionary={dictionary.header} lang={resolvedParams.lang} />
+        <Header dictionary={dictionary.header} lang={params.lang} />
         <main className="pt-22">{children}</main>
         <WhatsAppButton />
         <Footer
           dictionary={{ header: dictionary.header, footer: dictionary.footer }}
-          lang={resolvedParams.lang}
+          lang={params.lang} // ✅ artık doğru tip
         />
       </body>
     </html>
