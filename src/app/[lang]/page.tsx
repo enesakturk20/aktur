@@ -6,14 +6,15 @@ import { Locale } from './i18n-config';
 export default async function Home({
   params,
 }: {
-  params: { lang: Locale }; // Promise'i kaldırın
+  params: Promise<{ lang: Locale }>; // Promise olarak değiştirin
 }) {
-  const dictionary = await getDictionary(params.lang); // Direkt params kullanın
+  const resolvedParams = await params; // await ile çözümleyin
+  const dictionary = await getDictionary(resolvedParams.lang);
   
   return (
     <>
       <HeroSlider dictionary={dictionary.heroSlider} />
-      <TransportServices dictionary={dictionary.transportServices} lang={params.lang} />  
+      <TransportServices dictionary={dictionary.transportServices} lang={resolvedParams.lang} />  
     </>
   );
 }
