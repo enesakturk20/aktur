@@ -5,10 +5,10 @@ import { Locale } from "../i18n-config";
 const SchoolTransportPage = async ({
   params,
 }: {
-   params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: Locale }>;
 }) => {
   const resolvedParams = await params;
-   const dictionary = await getDictionary(resolvedParams.lang);
+  const dictionary = await getDictionary(resolvedParams.lang);
   return (
     <>
       <SchoolTransport dictionary={dictionary.schoolTransportPage} />
