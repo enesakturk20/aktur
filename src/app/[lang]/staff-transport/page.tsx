@@ -5,10 +5,10 @@ import { Locale } from "../i18n-config";
 const StaffTransportPage = async ({
   params,
 }: {
-  params: Promise<{ lang: Locale }>; // Promise olarak bırakın
+ params: Promise<{ lang: string }>; // string olarak değiştirin
 }) => {
-  const resolvedParams = await params; // await ile çözümleyin
-  const dictionary = await getDictionary(resolvedParams.lang);
+  const resolvedParams = await params;
+  const dictionary = await getDictionary(resolvedParams.lang as Locale); // as Locale ekleyin
   return (
     <>
       <StaffTransport dictionary={dictionary.staffTransportPage} />
