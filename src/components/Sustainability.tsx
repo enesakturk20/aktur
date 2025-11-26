@@ -22,6 +22,8 @@ const Sustainability = ({ dictionary }: SustainabilityProps) => {
           {/* Left - Image */}
           <div className="mt-10 lg:mt-20 px-4 lg:px-0">
             <Image
+              width={2000}
+              height={2000}
               src="/sürdürülebilirlik.png"
               alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"

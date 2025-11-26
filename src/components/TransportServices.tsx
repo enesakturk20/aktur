@@ -62,6 +62,7 @@ const TransportServices = ({ dictionary, lang }: TransportServicesProps) => {
               >
                 {/* Resim */}
                 <Image
+                  fill
                   src={service.image}
                   alt={dictionary.serviceList[index].alt} // Metni dictionary'den al
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

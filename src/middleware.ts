@@ -2,15 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { match } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 
-const locales = ['tr', 'en'];
+const locales = ['tr', 'en'] as const;
 export const defaultLocale = 'tr';
 
 function getLocale(request: NextRequest): string {
   const negotiatorHeaders: Record<string, string> = {};
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+  request.headers.forEach((value, key) => {
+    negotiatorHeaders[key] = value;
+  });
 
-  // @ts-ignore locales are readonly
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+  const negotiator = new Negotiator({ headers: negotiatorHeaders });
+  const languages: string[] = negotiator.languages(); // ✔ TS uyumlu, ✔ Lint uyumlu
 
   return match(languages, locales, defaultLocale);
 }
@@ -18,24 +20,27 @@ function getLocale(request: NextRequest): string {
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Kök path kontrolü - tarayıcı diline göre yönlendir
   if (pathname === '/') {
     const locale = getLocale(request);
     return NextResponse.redirect(new URL(`/${locale}`, request.url));
   }
 
   const pathnameIsMissingLocale = locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+    (locale) =>
+      !pathname.startsWith(`/${locale}/`) &&
+      pathname !== `/${locale}`
   );
 
   if (pathnameIsMissingLocale) {
     const locale = getLocale(request);
-    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
+    return NextResponse.redirect(
+      new URL(`/${locale}${pathname}`, request.url)
+    );
   }
 }
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)).*)'
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)).*)',
   ],
 };

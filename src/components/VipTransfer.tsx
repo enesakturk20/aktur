@@ -22,6 +22,8 @@ const VipTransfer = ({ dictionary }: VipTransferProps) => {
           {/* Left - Image */}
           <div className="mt-10 lg:mt-40 px-4 lg:px-0">
             <Image
+              width={2000}
+              height={2000}
               src="/vip-transfer.jpg"
               alt={dictionary.imageAlt}
               className="w-full h-full object-contain rounded-lg"
