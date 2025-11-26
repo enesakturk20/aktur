@@ -5,10 +5,9 @@ import { Locale } from "../i18n-config";
 const SustainabilityPage = async ({
   params,
 }: {
-    params: Promise<{ lang: Locale }>;
+    params: { lang: Locale }; // Promise'i kaldırın
 }) => {
-  const resolvedParams = await params;
-   const dictionary = await getDictionary(resolvedParams.lang);
+  const dictionary = await getDictionary(params.lang); // Direkt params kullanın
   return (
     <>
       <Sustainability dictionary={dictionary.sustainabilityPage} />
