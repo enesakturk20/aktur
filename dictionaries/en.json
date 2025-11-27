@@ -22,14 +22,14 @@
   },
   "footer": {
     "aboutTitle": "ABOUT US",
-    "aboutDescription": "Aktur Turizm is a leading company in the transportation sector with years of experience and trust. We offer a wide range of services from school bus transportation to staff transportation, from private transfer services to car rental.",
+    "aboutDescription": "Aktur Tourism is a leading company in the transportation sector with years of experience and trust. We offer a wide range of services from school bus transportation to staff transportation, from private transfer services to car rental.",
     "quickLinksTitle": "QUICK LINKS",
     "contactTitle": "CONTACT",
     "phoneTitle": "Phone",
     "emailTitle": "Email",
     "addressTitle": "Address",
     "addressValue": "Hasanpaşa Mah. Ahmet Rasim Sk. No:13/3 Kadiköy/İstanbul, Turkey",
-    "copyright": "© {year} Aktur Turizm. All rights reserved.",
+    "copyright": "© {year} Aktur Tourism. All rights reserved.",
     "privacyPolicy": "Privacy Policy",
     "termsOfUse": "Terms of Use"
   },
@@ -57,39 +57,39 @@
   },
   "vipTransferPage": {
     "title": "VIP Transfer Services",
-    "paragraph1": "Turn your travels into a privileged experience with Aktur Turizm. With our VIP transfer services, we offer you a special journey in our luxury and comfortable vehicles, accompanied by our professional drivers. We provide a prestigious transportation solution for airport transfers, business meetings, or your special days.",
+    "paragraph1": "Turn your travels into a privileged experience with Aktur Tourism. With our VIP transfer services, we offer you a special journey in our luxury and comfortable vehicles, accompanied by our professional drivers. We provide a prestigious transportation solution for airport transfers, business meetings, or your special days.",
     "paragraph2": "With our service approach where every detail is considered, we make you feel special from the beginning to the end of your journey. Security, privacy, and comfort are our priorities.",
     "imageAlt": "VIP Transfer Services"
   },
   "carRentalPage": {
     "title": "Car Rental",
-    "paragraph1": "Enjoy freedom with Aktur Turizm's extensive vehicle fleet. Whether for your business trips or holiday plans, we are at your service with modern and well-maintained vehicles suitable for every need. We offer flexible and reliable solutions with options for rental with or without a driver.",
+    "paragraph1": "Enjoy freedom with Aktur Tourism's extensive vehicle fleet. Whether for your business trips or holiday plans, we are at your service with modern and well-maintained vehicles suitable for every need. We offer flexible and reliable solutions with options for rental with or without a driver.",
     "paragraph2": "We make your travel plans easier with our wide range of vehicles, competitive prices, and customer-focused service. Choose the vehicle you need and leave the rest to us.",
     "imageAlt": "Car Rental Services"
   },
   "eventOrganizationPage": {
     "title": "Event and Organization Transportation",
-    "paragraph1": "Weddings, seminars, fairs, sports events, or your special invitations... Aktur Turizm offers professional transportation solutions for all kinds of events and organizations. We contribute to the success of your organization by ensuring your participants arrive at the event area comfortably and on time.",
+    "paragraph1": "Weddings, seminars, fairs, sports events, or your special invitations... Aktur Tourism offers professional transportation solutions for all kinds of events and organizations. We contribute to the success of your organization by ensuring your participants arrive at the event area comfortably and on time.",
     "paragraph2": "With our extensive vehicle fleet and experienced operations team, we cater to needs of all scales, from small groups to large crowds. Leave the logistics planning to us, and you focus on your event.",
     "imageAlt": "Event and Organization Transportation"
   },
   "schoolTransportPage": {
     "title": "School Bus Services",
-    "paragraph1": "Aktur Turizm maintains its leadership in school bus transportation by prioritizing safety, comfort, and timely arrival in student transport. With our advanced vehicle fleet, experienced driver staff, and student-focused approach, we ensure that thousands of students reach their schools safely and comfortably every day.",
-    "paragraph2": "As Aktur Turizm, we work with all our strength to provide students with the best transportation experience at every step of their educational life.",
+    "paragraph1": "Aktur Tourism maintains its leadership in school bus transportation by prioritizing safety, comfort, and timely arrival in student transport. With our advanced vehicle fleet, experienced driver staff, and student-focused approach, we ensure that thousands of students reach their schools safely and comfortably every day.",
+    "paragraph2": "As Aktur Tourism, we work with all our strength to provide students with the best transportation experience at every step of their educational life.",
     "imageAlt": "School Buses"
   },
   "staffTransportPage": {
     "title": "Staff Transportation",
-    "paragraph1": "Aktur Turizm aims for employees to reach their jobs on time and without any issues by prioritizing safety, comfort, and punctuality in staff transportation. With our advanced vehicle fleet, experienced driver staff, and customer-focused approach, we ensure that thousands of employees reach their workplaces safely and comfortably every day.",
-    "paragraph2": "While you focus on your business, we at Aktur Turizm add value to your company by transforming your employees' transportation into a reliable and comfortable experience.",
+    "paragraph1": "Aktur Tourism aims for employees to reach their jobs on time and without any issues by prioritizing safety, comfort, and punctuality in staff transportation. With our advanced vehicle fleet, experienced driver staff, and customer-focused approach, we ensure that thousands of employees reach their workplaces safely and comfortably every day.",
+    "paragraph2": "While you focus on your business, we at Aktur Tourism add value to your company by transforming your employees' transportation into a reliable and comfortable experience.",
     "imageAlt": "Staff Services"
   },
   "sustainabilityPage": {
     "title": "Sustainability",
-    "paragraph1": "As Aktur Turizm, we carry a strong responsibility to offer environmentally sensitive and sustainable transportation solutions. We continue our activities by adopting an environmentally friendly approach and are constantly looking for innovative solutions to reduce our ecological footprint.",
+    "paragraph1": "As Aktur Tourism, we carry a strong responsibility to offer environmentally sensitive and sustainable transportation solutions. We continue our activities by adopting an environmentally friendly approach and are constantly looking for innovative solutions to reduce our ecological footprint.",
     "paragraph2": "Our modern vehicle fleet is strengthened with low-emission and high-fuel-efficiency vehicles. In this way, we both protect our environment and offer our customers the opportunity to travel with lower carbon emissions.",
-    "paragraph3": "Sustainability is not just limited to the environment. As Aktur Turizm, we take part in social responsibility projects, contribute to local economies, and prioritize the well-being of our employees. We will continue to offer all our services with an awareness of environmental and social responsibility to leave a more livable world for future generations.",
+    "paragraph3": "Sustainability is not just limited to the environment. As Aktur Tourism, we take part in social responsibility projects, contribute to local economies, and prioritize the well-being of our employees. We will continue to offer all our services with an awareness of environmental and social responsibility to leave a more livable world for future generations.",
     "imageAlt": "Sustainability"
   }
 }
