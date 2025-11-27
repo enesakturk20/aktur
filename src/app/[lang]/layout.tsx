@@ -1,14 +1,19 @@
-import './globals.css';
-import Header from '@/components/Header';
-import WhatsAppButton from '../../../public/icons/WhatsAppButton';
-import type { ReactNode } from 'react';
-import Footer from '@/components/Footer';
-import { getDictionary } from './get-dictionary';
-import { Locale } from './i18n-config';
+import "./globals.css";
+import Header from "@/components/Header";
+import WhatsAppButton from "../../../public/icons/WhatsAppButton";
+import type { ReactNode } from "react";
+import Footer from "@/components/Footer";
+import { getDictionary } from "./get-dictionary";
+import { Locale } from "./i18n-config";
 
 export const metadata = {
-  title: 'Aktur Turizm',
-  description: 'Kurumsal Turizm Çözümleri',
+  title: "Aktur Turizm",
+  description: "Kurumsal Turizm Çözümleri",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default async function RootLayout({
@@ -24,7 +29,10 @@ export default async function RootLayout({
   return (
     <html lang={resolvedParams.lang}>
       <body>
-        <Header dictionary={dictionary.header} lang={resolvedParams.lang as Locale} />
+        <Header
+          dictionary={dictionary.header}
+          lang={resolvedParams.lang as Locale}
+        />
         <main className="pt-22">{children}</main>
         <WhatsAppButton />
         <Footer
