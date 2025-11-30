@@ -47,7 +47,7 @@ const TransportServices = ({ dictionary, lang }: TransportServicesProps) => {
   ];
 
   return (
-    <section className="py-50 px-4 bg-primary">
+    <section className="py-50 2xl:mt-40 px-4 bg-primary">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-28">
           {serviceData.map((service, index) => (
