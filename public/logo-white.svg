@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 418 112" width="418" height="112">
+  <!-- 1. LEFT EMBLEM CIRCLE -->
+  <circle cx="72.5" cy="53" r="45" fill="#c9a84c" />
+
+  <!-- Dynamic tail of A extending outside circle at bottom left -->
+  <path fill="#c9a84c" d="M 32 75 Q 26 83 24 88 Q 30 86 38 82 Z" />
+
+  <!-- 2. "AT" MONOGRAM (WHITE) -->
+  <path fill="#ffffff" d="
+    M 46 23 
+    H 105 
+    C 106 23, 106 33, 105 34 
+    H 89 
+    V 64 
+    H 70 
+    V 34 
+    H 46 
+    Z" />
+  
+  <path fill="#ffffff" d="
+    M 46 23 
+    L 28 85 
+    L 42 85 
+    L 50 56 
+    H 66 
+    V 44 
+    H 54 
+    L 60 23 
+    Z" />
+    
+  <path fill="#ffffff" d="
+    M 60 44
+    H 70
+    V 56
+    H 60
+    Z" />
+
+  <!-- 3. WORDMARK "AKTUR" (WHITE) -->
+  <g fill="#ffffff">
+    <!-- A -->
+    <path d="
+      M 135 27 
+      C 130 27, 128 32, 128 38 
+      V 66 
+      H 141 
+      V 52 
+      H 146 
+      V 66 
+      H 158 
+      V 38 
+      C 158 32, 156 27, 151 27 
+      Z 
+      M 141 40 
+      C 141 37, 143 35, 146 35 
+      C 149 35, 151 37, 151 40 
+      V 45 
+      H 141 
+      Z" />
+
+    <!-- K -->
+    <path d="
+      M 191 27 
+      H 203 
+      V 42 
+      L 210 27 
+      H 220 
+      L 209 46 
+      L 220 66 
+      H 207 
+      L 203 50 
+      V 66 
+      H 191 
+      Z" />
+
+    <!-- T -->
+    <path d="
+      M 250 27 
+      H 275 
+      C 276 27, 276 34, 275 35 
+      H 268 
+      V 66 
+      H 256 
+      V 35 
+      H 250 
+      Z" />
+
+    <!-- U -->
+    <path d="
+      M 303 27 
+      H 316 
+      V 53 
+      C 316 56, 318 58, 321 58 
+      C 324 58, 326 56, 326 53 
+      V 27 
+      H 334 
+      V 53 
+      C 334 62, 328 66, 320 66 
+      C 312 66, 303 62, 303 53 
+      Z" />
+
+    <!-- R -->
+    <path d="
+      M 366 27 
+      H 386 
+      C 392 27, 395 31, 395 38 
+      C 395 44, 391 48, 384 49 
+      L 395 66 
+      H 383 
+      L 378 50 
+      V 66 
+      H 366 
+      Z 
+      M 378 35 
+      H 383 
+      C 386 35, 387 36, 387 38 
+      C 387 40, 386 42, 383 42 
+      H 378 
+      Z" />
+  </g>
+
+  <!-- 4. SUBTITLE TEXT (WHITE) -->
+  <text x="132" y="87" 
+        font-family="'Segoe UI', 'SF Pro Text', -apple-system, Roboto, Helvetica, Arial, sans-serif" 
+        font-size="14.5" 
+        font-weight="600" 
+        letter-spacing="0.6px" 
+        fill="#ffffff">Turizm Taş. ve Otm. San. Ltd. Şti.</text>
+</svg>

@@ -19,6 +19,8 @@ function getLocale(request: NextRequest): string {
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
 
   if (pathname === '/') {
     const locale = getLocale(request);
@@ -37,6 +39,12 @@ export function middleware(request: NextRequest) {
       new URL(`/${locale}${pathname}`, request.url)
     );
   }
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    }
+  });
 }
 
 export const config = {

@@ -29,14 +29,14 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide((prev) => (prev + 1) % slideData.length);
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 700);
   }, [isAnimating]);
 
   const prevSlide = useCallback(() => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrentSlide((prev) => (prev - 1 + slideData.length) % slideData.length);
-    setTimeout(() => setIsAnimating(false), 500);
+    setTimeout(() => setIsAnimating(false), 700);
   }, [isAnimating]);
 
   const goToSlide = useCallback(
@@ -44,7 +44,7 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
       if (isAnimating || index === currentSlide) return;
       setIsAnimating(true);
       setCurrentSlide(index);
-      setTimeout(() => setIsAnimating(false), 500);
+      setTimeout(() => setIsAnimating(false), 700);
     },
     [isAnimating, currentSlide]
   );
@@ -60,14 +60,14 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
   const slideContent = dictionary.slides[currentSlide];
 
   return (
-    <section className="pt-55">
+    <section className="relative h-screen min-h-[600px] w-full overflow-hidden">
       {/* Background images */}
       <div className="absolute inset-0">
         {slideData.map((s, index) => (
           <div
             key={s.id}
-            className={`absolute inset-0 transition-opacity duration-700 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              index === currentSlide ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
             }`}
           >
             <Image
@@ -75,14 +75,11 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
               alt={dictionary.slides[index].badge}
               fill
               className="object-cover"
+              priority={index === 0}
             />
-            <div
-              className={`absolute inset-0 ${
-                s.type === "personel"
-                  ? "bg-gradient-to-r from-black/70 via-black/50 to-transparent"
-                  : "bg-black/40"
-              }`}
-            ></div>
+            {/* Premium Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
           </div>
         ))}
       </div>
@@ -91,59 +88,65 @@ export default function HeroSlider({ dictionary }: HeroSliderProps) {
       <button
         onClick={prevSlide}
         disabled={isAnimating}
-        className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-full transition-all disabled:opacity-50"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md p-3 md:p-4 rounded-full transition-all duration-300 disabled:opacity-0 hover:scale-110 group"
       >
-        <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white" />
+        <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:-translate-x-1 transition-transform" />
       </button>
 
       <button
         onClick={nextSlide}
         disabled={isAnimating}
-        className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-full transition-all disabled:opacity-50"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md p-3 md:p-4 rounded-full transition-all duration-300 disabled:opacity-0 hover:scale-110 group"
       >
-        <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white" />
+        <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:translate-x-1 transition-transform" />
       </button>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 text-center md:text-left">
+      <div className="relative z-10 h-full flex items-center container mx-auto px-6 md:px-16 lg:px-24">
         <div
-          className={`max-w-2xl transition-all duration-700 ${
-            isAnimating
-              ? "opacity-0 translate-x-4 md:translate-x-8"
-              : "opacity-100 translate-x-0"
-          }`}
+          key={currentSlide} // Force re-render for animation
+          className="max-w-3xl animate-fade-in-up"
         >
           {/* Badge */}
-          <div className="inline-block mb-3 md:mb-4">
-            <span className="bg-primary text-white px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-semibold tracking-wide">
+          <div className="inline-block mb-6">
+            <span className="glass-panel text-white px-5 py-2 rounded-full text-xs md:text-sm font-semibold tracking-wider uppercase border border-white/30 shadow-xl">
               {slideContent.badge}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-snug">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight drop-shadow-2xl">
             {slideContent.title}
-            <span className="block text-white">{slideContent.titleHighlight}</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white/70 mt-2">
+              {slideContent.titleHighlight}
+            </span>
           </h1>
 
           {/* Description */}
-          <p className="text-sm md:text-lg text-gray-200 mb-6 md:mb-8 leading-relaxed">
+          <p className="text-base md:text-xl text-slate-200 mb-10 leading-relaxed max-w-2xl font-light drop-shadow-md">
             {slideContent.description}
           </p>
+          
+          {/* Action Button (Optional placeholder if needed in the future) */}
+          <div className="flex gap-4">
+            <button className="px-8 py-3.5 bg-primary hover:bg-primary-dark text-white rounded-full font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] hover:-translate-y-1">
+              Daha Fazla Bilgi
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2 md:gap-3">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-3">
         {slideData.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
             disabled={isAnimating}
-            className={`transition-all duration-300 rounded-full h-2 md:h-3 ${
+            className={`transition-all duration-500 rounded-full h-1.5 md:h-2 ${
               index === currentSlide
-                ? "w-8 md:w-12 bg-primary"
-                : "w-2 md:w-3 bg-white/50 hover:bg-white/70"
+                ? "w-10 md:w-16 bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                : "w-3 md:w-4 bg-white/40 hover:bg-white/70"
             }`}
           />
         ))}
