@@ -932,27 +932,6 @@ const VipTransfer = ({ dictionary }: VipTransferProps) => {
                               </div>
                             </div>
                           </div>
-
-                          {/* KM-based pricing list */}
-                          {vehicle.priceRanges && vehicle.priceRanges.length > 0 && (
-                            <div className="mt-5 pt-5 border-t border-slate-100 animate-fade-in">
-                              <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">{dictionary.kmPriceRates || "KM Bazlı Fiyat Tarifeleri"}</span>
-                              <div className="space-y-2">
-                                {vehicle.priceRanges.map((range: any, rIdx: number) => (
-                                  <div key={rIdx} className="flex justify-between items-center bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-100/30 text-xs">
-                                    <span className="font-medium text-slate-600">{range.fromKm} - {range.toKm} KM</span>
-                                    <span className="font-extrabold text-slate-800">{range.price.toLocaleString(lang === "en" ? "en-US" : "tr-TR")} ₺</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="p-6 pt-0">
-                        <div className="w-full bg-primary/5 group-hover:bg-primary text-primary group-hover:text-white py-3 rounded-2xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2">
-                          <span>Ayrıntıları İncele</span>
                         </div>
                       </div>
                     </div>
