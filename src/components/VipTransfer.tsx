@@ -40,6 +40,19 @@ const getDefaultDateTime = () => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
+const getMinDateTime = () => {
+  const date = new Date();
+  date.setHours(date.getHours() + 4);
+  date.setMinutes(date.getMinutes() + 1);
+  const pad = (num: number) => String(num).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 const countriesTr = [
   { value: "TR", label: "Türkiye", phoneCode: "+90" }
 ];
@@ -104,6 +117,16 @@ const VipTransfer = ({ dictionary }: VipTransferProps) => {
   const [hasHydrated, setHasHydrated] = useState(false);
   useEffect(() => {
     setHasHydrated(true);
+    // If the stored date is in the past or less than 4 hours ahead, reset to a valid default
+    if (dateValue) {
+      const selected = new Date(dateValue).getTime();
+      const minAllowed = Date.now() + 4 * 60 * 60 * 1000;
+      if (isNaN(selected) || selected < minAllowed) {
+        setDateValue(getDefaultDateTime());
+      }
+    } else {
+      setDateValue(getDefaultDateTime());
+    }
   }, []);
 
   useEffect(() => {
@@ -623,52 +646,9 @@ const VipTransfer = ({ dictionary }: VipTransferProps) => {
                   <div className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-6 md:p-8 border border-slate-100 relative">
                     <form onSubmit={handleSubmit}>
                       {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-4 rounded-xl mb-6 space-y-3">
-                          <div className="flex items-center gap-3">
-                            <AlertCircle className="w-5 h-5 shrink-0" />
-                            <p className="text-sm font-medium">{error}</p>
-                          </div>
-
-                          {/* Geliştirici Test Fallback Seçeneği */}
-                          <div className="pt-3 border-t border-red-200/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div className="text-xs text-red-700 max-w-md">
-                              {lang === "en" ? (
-                                <>
-                                  <strong>Developer Tip:</strong> Ensure that the <strong>Distance Matrix API</strong> service is enabled in Google Cloud Console. You can enter a temporary distance to simulate for testing:
-                                </>
-                              ) : (
-                                <>
-                                  <strong>Geliştirici İpucu:</strong> Google Cloud Console üzerinden <strong>Distance Matrix API</strong> servisinin etkinleştirildiğinden emin olun. Teste devam etmek için geçici bir mesafe girerek simülasyon yapabilirsiniz:
-                                </>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              <input
-                                type="number"
-                                placeholder={lang === "en" ? "Distance (KM)" : "Mesafe (KM)"}
-                                className="w-20 px-2 py-1 text-xs border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary text-slate-700 bg-white"
-                                id="fallback-km-input"
-                                min="1"
-                                defaultValue="25"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const inputEl = document.getElementById("fallback-km-input") as HTMLInputElement;
-                                  const km = parseFloat(inputEl?.value || "25");
-                                  setDistanceKm(km);
-                                  setDurationText(lang === "en" ? "Est. 35 mins" : "Tahmini 35 dk");
-                                  setError(null);
-                                  setStep(2);
-                                  window.scrollTo({ top: 0, behavior: "smooth" });
-                                }}
-                                className="px-3 py-1 bg-primary hover:bg-primary-dark text-white rounded-md text-xs font-bold transition-colors whitespace-nowrap"
-                              >
-                                {lang === "en" ? "Simulate" : "Simüle Et"}
-                              </button>
-                            </div>
-                          </div>
+                        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 flex items-center gap-3 animate-fade-in">
+                          <AlertCircle className="w-5 h-5 shrink-0" />
+                          <p className="text-sm font-medium">{error}</p>
                         </div>
                       )}
 
@@ -773,6 +753,7 @@ const VipTransfer = ({ dictionary }: VipTransferProps) => {
                               type="datetime-local"
                               id="date"
                               value={dateValue}
+                              min={getMinDateTime()}
                               onChange={(e) => setDateValue(e.target.value)}
                               required
                               className="w-full pl-4 pr-10 py-3 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-slate-700 text-sm appearance-none"

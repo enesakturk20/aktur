@@ -19,6 +19,19 @@ export const getDefaultDateTime = () => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
+export const getMinDateTime = () => {
+  const date = new Date();
+  date.setHours(date.getHours() + 4);
+  date.setMinutes(date.getMinutes() + 1);
+  const pad = (num: number) => String(num).padStart(2, "0");
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 export interface PassengerDetail {
   fullName: string;
   dateOfBirth: string;
