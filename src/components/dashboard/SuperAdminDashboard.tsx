@@ -6,6 +6,14 @@ import TopHeader from "./ui/TopHeader";
 import StatCard from "./ui/StatCard";
 import { adminService, getImageUrl } from "@/services";
 
+const formatTransferDateTime = (dateStr: string | null | undefined, locale = "tr-TR"): string => {
+  if (!dateStr) return "-";
+  const cleanStr = typeof dateStr === "string" ? dateStr.replace(/Z$/, "") : dateStr;
+  const d = new Date(cleanStr);
+  if (isNaN(d.getTime())) return String(dateStr);
+  return `${d.toLocaleDateString(locale)} ${d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}`;
+};
+
 interface SuperAdminDashboardProps {
   dictionary: any;
   lang: string;
@@ -1247,9 +1255,9 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
                               </div>
                             </td>
                             <td className="px-6 py-4 text-sm text-slate-600">
-                              <div>{new Date(res.transferDate).toLocaleDateString('tr-TR')} {new Date(res.transferDate).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</div>
+                              <div>{formatTransferDateTime(res.transferDate)}</div>
                               {res.isReturn && res.returnDate && (
-                                <div className="text-xs text-slate-400 mt-0.5">Dönüş: {new Date(res.returnDate).toLocaleDateString('tr-TR')} {new Date(res.returnDate).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}</div>
+                                <div className="text-xs text-slate-400 mt-0.5">Dönüş: {formatTransferDateTime(res.returnDate)}</div>
                               )}
                             </td>
                             <td className="px-6 py-4 text-sm">
@@ -2137,7 +2145,7 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
                   <div>
                     <span className="block text-xs text-slate-400">Gidiş Tarihi</span>
                     <span className="font-semibold text-slate-800">
-                      {new Date(selectedReservation.transferDate).toLocaleDateString('tr-TR')} {new Date(selectedReservation.transferDate).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+                      {formatTransferDateTime(selectedReservation.transferDate)}
                     </span>
                   </div>
                   <div>
@@ -2148,9 +2156,7 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
                     <div>
                       <span className="block text-xs text-slate-400">Dönüş Tarihi</span>
                       <span className="font-semibold text-slate-800">
-                        {selectedReservation.returnDate ? (
-                          `${new Date(selectedReservation.returnDate).toLocaleDateString('tr-TR')} ${new Date(selectedReservation.returnDate).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}`
-                        ) : "-"}
+                        {formatTransferDateTime(selectedReservation.returnDate)}
                       </span>
                     </div>
                   )}

@@ -1967,7 +1967,7 @@ const VipTransfer = ({ dictionary }: VipTransferProps) => {
                         </span>
                         <div className="flex items-center gap-1.5 text-slate-700 font-bold text-xs">
                           <Calendar className="w-3.5 h-3.5 text-primary" />
-                          <span>{reservationSuccess.transferDate ? new Date(reservationSuccess.transferDate).toLocaleString(lang === "en" ? "en-US" : "tr-TR") : "-"}</span>
+                          <span>{reservationSuccess.transferDate ? new Date(reservationSuccess.transferDate.replace(/Z$/, "")).toLocaleString(lang === "en" ? "en-US" : "tr-TR", { dateStyle: "short", timeStyle: "short" }) : "-"}</span>
                         </div>
                       </div>
                       <div>
