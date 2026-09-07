@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { studentService } from "@/services";
 import {
   User,
   School,
@@ -85,8 +86,7 @@ const StudentRegisterForm = ({ company, dictionary, hideBranding = false }: Stud
 
   // Load provinces on component mount
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/address/provinces`)
-      .then((res) => res.json())
+    studentService.getProvinces()
       .then(setProvinces)
       .catch((err) => console.error('Failed to load provinces', err));
   }, []);
@@ -98,11 +98,7 @@ const StudentRegisterForm = ({ company, dictionary, hideBranding = false }: Stud
       setNeighborhoods([]);
       return;
     }
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}` +
-      `/api/address/provinces/${formData.city}/districts`
-    )
-      .then((res) => res.json())
+    studentService.getDistricts(formData.city)
       .then(setDistricts)
       .catch((err) => console.error('Failed to load districts', err));
   }, [formData.city]);
@@ -113,20 +109,8 @@ const StudentRegisterForm = ({ company, dictionary, hideBranding = false }: Stud
       setNeighborhoods([]);
       return;
     }
-    const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}` +
-      `/api/address/districts/${formData.district}/neighborhoods`;
-    console.log('Fetching neighborhoods from', url);
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log('Neighborhoods data', data);
-        setNeighborhoods(data);
-      })
+    studentService.getNeighborhoods(formData.district)
+      .then(setNeighborhoods)
       .catch((err) => console.error('Failed to load neighborhoods', err));
   }, [formData.district]);
 
@@ -180,8 +164,6 @@ const StudentRegisterForm = ({ company, dictionary, hideBranding = false }: Stud
 
     setIsSubmitting(true);
     setSubmitError("");
-
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
     const payload = {
       fullName: formData.fullName,
       school: formData.school,
@@ -199,18 +181,7 @@ const StudentRegisterForm = ({ company, dictionary, hideBranding = false }: Stud
     };
 
     try {
-      const response = await fetch(`${apiBaseUrl}/api/students`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Öğrenci kaydı oluşturulurken bir hata oluştu.");
-      }
+      await studentService.registerStudent(payload as any);
 
       setSubmitSuccess(true);
       setFormData({

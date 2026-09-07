@@ -4,25 +4,13 @@ import { useState, useEffect } from "react";
 import Sidebar, { MenuItem } from "./ui/Sidebar";
 import TopHeader from "./ui/TopHeader";
 import StatCard from "./ui/StatCard";
+import { adminService, getImageUrl } from "@/services";
 
 interface SuperAdminDashboardProps {
   dictionary: any;
   lang: string;
   user: any;
 }
-
-const getImageUrl = (url: string | null | undefined) => {
-  if (!url) return "";
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-  
-  // Eğer veritabanında yanlışlıkla localhost:8080 kaydedilmişse, bunu API url'si ile değiştir (sunucu için)
-  if (url.includes("http://localhost:8080") && apiBaseUrl !== "http://localhost:8080") {
-    return url.replace("http://localhost:8080", apiBaseUrl);
-  }
-  
-  if (url.startsWith("http")) return url;
-  return `${apiBaseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
-};
 
 export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdminDashboardProps) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -176,17 +164,8 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchStats = async () => {
     setIsLoadingStats(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/system-stats`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setStats(data);
-      }
+      const data = await adminService.getSystemStats();
+      setStats(data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -197,22 +176,11 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchCompanies = async () => {
     setIsLoadingCompanies(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/companies`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setCompanies(data);
-      } else {
-        showToast(dictionary.errorFetch || "Firmalar yüklenemedi.", "error");
-      }
+      const data = await adminService.getCompanies();
+      setCompanies(data);
     } catch (e) {
       console.error(e);
-      showToast(dictionary.errorFetch || "Bir hata oluştu.", "error");
+      showToast(dictionary.errorFetch || "Firmalar yüklenemedi.", "error");
     } finally {
       setIsLoadingCompanies(false);
     }
@@ -221,17 +189,8 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchVehicles = async () => {
     setIsLoadingVehicles(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/vehicles`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setVehicles(data);
-      }
+      const data = await adminService.getAllVehicles();
+      setVehicles(data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -242,17 +201,8 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchStudents = async () => {
     setIsLoadingStudents(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/students`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setStudents(data);
-      }
+      const data = await adminService.getAllStudents();
+      setStudents(data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -263,22 +213,11 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchVipVehicles = async () => {
     setIsLoadingVipVehicles(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/VipVehicles`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setVipVehicles(data);
-      } else {
-        showToast(dictionary.errorFetch || "Veriler yüklenirken hata oluştu.", "error");
-      }
+      const data = await adminService.getVipVehicles();
+      setVipVehicles(data);
     } catch (e) {
       console.error(e);
-      showToast(dictionary.errorGeneric || "Bir hata oluştu.", "error");
+      showToast(dictionary.errorFetch || "Veriler yüklenirken hata oluştu.", "error");
     } finally {
       setIsLoadingVipVehicles(false);
     }
@@ -356,36 +295,23 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
       return;
     }
     setIsSubmitting(true);
-    try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/VipVehicles`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          name: vipName,
-          luggageCapacity: Number(vipLuggage),
-          passengerCapacity: Number(vipPassenger),
-          imageUrl: vipImage || null,
-          isVisible: vipIsVisible,
-          priceRanges: vipPriceRanges
-        })
-      });
+    const payload = {
+      name: vipName,
+      luggageCapacity: Number(vipLuggage),
+      passengerCapacity: Number(vipPassenger),
+      imageUrl: vipImage || null,
+      isVisible: vipIsVisible,
+      priceRanges: vipPriceRanges
+    };
 
-      if (res.ok) {
-        showToast(dictionary.successAddVipVehicle || "VIP araç başarıyla eklendi.");
-        setShowAddVipModal(false);
-        fetchVipVehicles();
-      } else {
-        const err = await res.text();
-        showToast(err || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+    try {
+      await adminService.createVipVehicle(payload);
+      showToast(dictionary.successAddVipVehicle || "VIP araç başarıyla eklendi.");
+      setShowAddVipModal(false);
+      fetchVipVehicles();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -398,36 +324,23 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
       return;
     }
     setIsSubmitting(true);
-    try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/VipVehicles/${selectedVipVehicle.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          name: vipName,
-          luggageCapacity: Number(vipLuggage),
-          passengerCapacity: Number(vipPassenger),
-          imageUrl: vipImage || null,
-          isVisible: vipIsVisible,
-          priceRanges: vipPriceRanges
-        })
-      });
+    const payload = {
+      name: vipName,
+      luggageCapacity: Number(vipLuggage),
+      passengerCapacity: Number(vipPassenger),
+      imageUrl: vipImage || null,
+      isVisible: vipIsVisible,
+      priceRanges: vipPriceRanges
+    };
 
-      if (res.ok) {
-        showToast(dictionary.successUpdateVipVehicle || "VIP araç başarıyla güncellendi.");
-        setShowEditVipModal(false);
-        fetchVipVehicles();
-      } else {
-        const err = await res.text();
-        showToast(err || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+    try {
+      await adminService.updateVipVehicle(selectedVipVehicle.id, payload);
+      showToast(dictionary.successUpdateVipVehicle || "VIP araç başarıyla güncellendi.");
+      setShowEditVipModal(false);
+      fetchVipVehicles();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -436,25 +349,13 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const handleDeleteVipVehicle = async () => {
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/VipVehicles/${selectedVipVehicle.id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (res.ok) {
-        showToast(dictionary.successDeleteVipVehicle || "VIP araç silindi.");
-        setShowDeleteVipModal(false);
-        fetchVipVehicles();
-      } else {
-        showToast("VIP araç silinirken bir hata oluştu.", "error");
-      }
-    } catch (err) {
+      await adminService.deleteVipVehicle(selectedVipVehicle.id);
+      showToast(dictionary.successDeleteVipVehicle || "VIP araç silindi.");
+      setShowDeleteVipModal(false);
+      fetchVipVehicles();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -463,31 +364,20 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchVipReservations = async () => {
     setIsLoadingVipReservations(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/VipVehicles/reservations`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const sortedData = Array.isArray(data)
-          ? [...data].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-          : [];
-        setVipReservations(sortedData);
-      } else {
-        if (res.status === 401) {
-          localStorage.removeItem("aktur_token");
-          localStorage.removeItem("aktur_user");
-          window.location.href = `/${lang}/portal`;
-          return;
-        }
-        showToast("VIP rezervasyonları yüklenirken hata oluştu.", "error");
-      }
-    } catch (e) {
+      const data = await adminService.getVipReservations();
+      const sortedData = Array.isArray(data)
+        ? [...data].sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        : [];
+      setVipReservations(sortedData);
+    } catch (e: any) {
       console.error(e);
-      showToast("Bir hata oluştu.", "error");
+      if (e?.status === 401) {
+        localStorage.removeItem("aktur_token");
+        localStorage.removeItem("aktur_user");
+        window.location.href = `/${lang}/portal`;
+        return;
+      }
+      showToast("VIP rezervasyonları yüklenirken hata oluştu.", "error");
     } finally {
       setIsLoadingVipReservations(false);
     }
@@ -501,22 +391,11 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const fetchBankAccounts = async () => {
     setIsLoadingBankAccounts(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/BankAccounts`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setBankAccounts(data);
-      } else {
-        showToast("Banka hesapları yüklenirken hata oluştu.", "error");
-      }
+      const data = await adminService.getBankAccounts();
+      setBankAccounts(data);
     } catch (e) {
       console.error(e);
-      showToast("Bir hata oluştu.", "error");
+      showToast("Banka hesapları yüklenirken hata oluştu.", "error");
     } finally {
       setIsLoadingBankAccounts(false);
     }
@@ -554,34 +433,19 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
     }
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/BankAccounts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          bankName,
-          accountHolder,
-          iban,
-          currency,
-          isActive: bankIsActive
-        })
+      await adminService.createBankAccount({
+        bankName,
+        accountHolder,
+        iban,
+        currency,
+        isActive: bankIsActive
       });
-
-      if (res.ok) {
-        showToast("Banka hesabı başarıyla eklendi.");
-        setShowAddBankModal(false);
-        fetchBankAccounts();
-      } else {
-        const err = await res.text();
-        showToast(err || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+      showToast("Banka hesabı başarıyla eklendi.");
+      setShowAddBankModal(false);
+      fetchBankAccounts();
+    } catch (err: any) {
       console.error(err);
-      showToast("Sistem hatası.", "error");
+      showToast(err?.message || "Hata oluştu.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -595,34 +459,19 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
     }
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/BankAccounts/${selectedBankAccount.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          bankName,
-          accountHolder,
-          iban,
-          currency,
-          isActive: bankIsActive
-        })
+      await adminService.updateBankAccount(selectedBankAccount.id, {
+        bankName,
+        accountHolder,
+        iban,
+        currency,
+        isActive: bankIsActive
       });
-
-      if (res.ok) {
-        showToast("Banka hesabı başarıyla güncellendi.");
-        setShowEditBankModal(false);
-        fetchBankAccounts();
-      } else {
-        const err = await res.text();
-        showToast(err || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+      showToast("Banka hesabı başarıyla güncellendi.");
+      setShowEditBankModal(false);
+      fetchBankAccounts();
+    } catch (err: any) {
       console.error(err);
-      showToast("Sistem hatası.", "error");
+      showToast(err?.message || "Hata oluştu.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -631,25 +480,13 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const handleDeleteBankAccount = async () => {
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/BankAccounts/${selectedBankAccount.id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (res.ok) {
-        showToast("Banka hesabı silindi.");
-        setShowDeleteBankModal(false);
-        fetchBankAccounts();
-      } else {
-        showToast("Banka hesabı silinirken bir hata oluştu.", "error");
-      }
+      await adminService.deleteBankAccount(selectedBankAccount.id);
+      showToast("Banka hesabı silindi.");
+      setShowDeleteBankModal(false);
+      fetchBankAccounts();
     } catch (err) {
       console.error(err);
-      showToast("Sistem hatası.", "error");
+      showToast("Banka hesabı silinirken bir hata oluştu.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -703,28 +540,13 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
     }
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/companies`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ name, email, password, logo: logo || null })
-      });
-
-      if (res.ok) {
-        showToast(dictionary.successAddCompany || "Firma başarıyla eklendi.");
-        setShowAddModal(false);
-        fetchCompanies();
-      } else {
-        const err = await res.text();
-        showToast(err || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+      await adminService.createCompany({ name, email, password, logo: logo || null });
+      showToast(dictionary.successAddCompany || "Firma başarıyla eklendi.");
+      setShowAddModal(false);
+      fetchCompanies();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -738,28 +560,18 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
     }
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/companies/${selectedCompany.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ name, email, password: password || null, logo: logo || null })
+      await adminService.updateCompany(selectedCompany.id, {
+        name,
+        email,
+        password: password || null,
+        logo: logo || null,
       });
-
-      if (res.ok) {
-        showToast(dictionary.successUpdateCompany || "Firma güncellendi.");
-        setShowEditModal(false);
-        fetchCompanies();
-      } else {
-        const err = await res.text();
-        showToast(err || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+      showToast(dictionary.successUpdateCompany || "Firma güncellendi.");
+      setShowEditModal(false);
+      fetchCompanies();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -768,22 +580,10 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
   const handleDeleteCompany = async () => {
     setIsSubmitting(true);
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/companies/${selectedCompany.id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (res.ok) {
-        showToast(dictionary.successDeleteCompany || "Firma silindi.");
-        setShowDeleteModal(false);
-        fetchCompanies();
-      } else {
-        showToast("Firma silinirken bir hata oluştu.", "error");
-      }
+      await adminService.deleteCompany(selectedCompany.id);
+      showToast(dictionary.successDeleteCompany || "Firma silindi.");
+      setShowDeleteModal(false);
+      fetchCompanies();
     } catch (err) {
       console.error(err);
       showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
@@ -794,21 +594,9 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
 
   const handleToggleAdmin = async (company: any) => {
     try {
-      const token = localStorage.getItem("aktur_token");
-      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-      const res = await fetch(`${apiBaseUrl}/api/Admin/companies/${company.id}/toggle-admin`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (res.ok) {
-        showToast(dictionary.successToggleAdmin || "Admin yetkisi değiştirildi.");
-        fetchCompanies();
-      } else {
-        showToast("Yetkilendirme sırasında bir hata oluştu.", "error");
-      }
+      await adminService.toggleAdmin(company.id);
+      showToast(dictionary.successToggleAdmin || "Admin yetkisi değiştirildi.");
+      fetchCompanies();
     } catch (err) {
       console.error(err);
       showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
@@ -1888,30 +1676,12 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
 
                         setIsUploadingImage(true);
                         try {
-                          const formData = new FormData();
-                          formData.append("file", file);
-
-                          const token = localStorage.getItem("aktur_token");
-                          const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-                          const res = await fetch(`${apiBaseUrl}/api/Upload`, {
-                            method: "POST",
-                            headers: {
-                              "Authorization": `Bearer ${token}`
-                            },
-                            body: formData
-                          });
-
-                          if (res.ok) {
-                            const data = await res.json();
-                            setVipImage(data.url);
-                            showToast("Görsel başarıyla yüklendi.");
-                          } else {
-                            const err = await res.text();
-                            showToast(err || "Yükleme hatası.", "error");
-                          }
-                        } catch (err) {
+                          const data = await adminService.uploadFile(file);
+                          setVipImage(data.url);
+                          showToast("Görsel başarıyla yüklendi.");
+                        } catch (err: any) {
                           console.error(err);
-                          showToast("Görsel yüklenirken bir hata oluştu.", "error");
+                          showToast(err?.message || "Görsel yüklenirken bir hata oluştu.", "error");
                         } finally {
                           setIsUploadingImage(false);
                         }
@@ -2126,30 +1896,12 @@ export default function SuperAdminDashboard({ dictionary, lang, user }: SuperAdm
 
                         setIsUploadingImage(true);
                         try {
-                          const formData = new FormData();
-                          formData.append("file", file);
-
-                          const token = localStorage.getItem("aktur_token");
-                          const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-                          const res = await fetch(`${apiBaseUrl}/api/Upload`, {
-                            method: "POST",
-                            headers: {
-                              "Authorization": `Bearer ${token}`
-                            },
-                            body: formData
-                          });
-
-                          if (res.ok) {
-                            const data = await res.json();
-                            setVipImage(data.url);
-                            showToast("Görsel başarıyla yüklendi.");
-                          } else {
-                            const err = await res.text();
-                            showToast(err || "Yükleme hatası.", "error");
-                          }
-                        } catch (err) {
+                          const data = await adminService.uploadFile(file);
+                          setVipImage(data.url);
+                          showToast("Görsel başarıyla yüklendi.");
+                        } catch (err: any) {
                           console.error(err);
-                          showToast("Görsel yüklenirken bir hata oluştu.", "error");
+                          showToast(err?.message || "Görsel yüklenirken bir hata oluştu.", "error");
                         } finally {
                           setIsUploadingImage(false);
                         }

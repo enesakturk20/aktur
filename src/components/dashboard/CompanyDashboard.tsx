@@ -5,6 +5,7 @@ import Sidebar, { MenuItem } from "./ui/Sidebar";
 import TopHeader from "./ui/TopHeader";
 import StatCard from "./ui/StatCard";
 import { ChevronDown } from "lucide-react";
+import { companyService, studentService } from "@/services";
 
 interface CompanyDashboardProps {
   dictionary: any;
@@ -114,36 +115,15 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
 
   const fetchData = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      // Fetch schools
-      const resSchools = await fetch(`${apiBaseUrl}/api/Schools`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (resSchools.ok) {
-        const dataSchools = await resSchools.json();
-        setSchools(dataSchools);
-      }
-
-      // Fetch vehicles
-      const resVehicles = await fetch(`${apiBaseUrl}/api/Vehicles`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (resVehicles.ok) {
-        const dataVehicles = await resVehicles.json();
-        setVehicles(dataVehicles);
-      }
-
-      // Fetch students
-      const resStudents = await fetch(`${apiBaseUrl}/api/Students`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (resStudents.ok) {
-        const dataStudents = await resStudents.json();
-        setStudents(dataStudents);
-      }
+      const [dataSchools, dataVehicles, dataStudents] = await Promise.all([
+        companyService.getSchools(),
+        companyService.getVehicles(),
+        companyService.getStudents(),
+      ]);
+      setSchools(dataSchools);
+      setVehicles(dataVehicles);
+      setStudents(dataStudents);
     } catch (e) {
       console.error(e);
       showToast(dictionary.errorFetch || "Veriler yüklenirken bir hata oluştu.", "error");
@@ -158,9 +138,7 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
 
   // Address cascading: load provinces on mount
   useEffect(() => {
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-    fetch(`${apiBaseUrl}/api/address/provinces`)
-      .then((res) => res.json())
+    studentService.getProvinces()
       .then(setProvinces)
       .catch((err) => console.error("Failed to load provinces", err));
   }, []);
@@ -173,9 +151,7 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     if (skipCascadeReset.current) return;
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-    fetch(`${apiBaseUrl}/api/address/provinces/${city}/districts`)
-      .then((res) => res.json())
+    studentService.getDistricts(city)
       .then(setDistricts)
       .catch((err) => console.error("Failed to load districts", err));
     setDistrict("");
@@ -190,9 +166,7 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     if (skipCascadeReset.current) return;
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-    fetch(`${apiBaseUrl}/api/address/districts/${district}/neighborhoods`)
-      .then((res) => res.json())
+    studentService.getNeighborhoods(district)
       .then(setNeighborhoods)
       .catch((err) => console.error("Failed to load neighborhoods", err));
     setNeighborhood("");
@@ -264,45 +238,23 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      let res;
       if (schoolModalType === "add") {
-        res = await fetch(`${apiBaseUrl}/api/Schools`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ name: schoolName })
-        });
+        await companyService.createSchool({ name: schoolName });
       } else {
-        res = await fetch(`${apiBaseUrl}/api/Schools/${selectedSchool.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ name: schoolName })
-        });
+        await companyService.updateSchool(selectedSchool.id, { name: schoolName });
       }
 
-      if (res.ok) {
-        showToast(
-          schoolModalType === "add"
-            ? dictionary.successAddSchool || "Okul başarıyla eklendi."
-            : dictionary.successUpdateSchool || "Okul başarıyla güncellendi."
-        );
-        setShowSchoolModal(false);
-        fetchData();
-      } else {
-        showToast("Bir hata oluştu.", "error");
-      }
-    } catch (err) {
+      showToast(
+        schoolModalType === "add"
+          ? dictionary.successAddSchool || "Okul başarıyla eklendi."
+          : dictionary.successUpdateSchool || "Okul başarıyla güncellendi."
+      );
+      setShowSchoolModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -310,24 +262,14 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
 
   const handleDeleteSchool = async () => {
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Schools/${selectedSchool.id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (res.ok) {
-        showToast(dictionary.successDeleteSchool || "Okul başarıyla silindi.");
-        setShowSchoolDeleteModal(false);
-        fetchData();
-      } else {
-        showToast("Okul silinirken bir hata oluştu.", "error");
-      }
-    } catch (err) {
+      await companyService.deleteSchool(selectedSchool.id);
+      showToast(dictionary.successDeleteSchool || "Okul başarıyla silindi.");
+      setShowSchoolDeleteModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || "Okul silinirken bir hata oluştu.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -369,49 +311,26 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     // Format plate: uppercase and trim spaces
     const formattedPlate = plate.toUpperCase().replace(/\s+/g, "");
 
     try {
-      let res;
       if (vehicleModalType === "add") {
-        res = await fetch(`${apiBaseUrl}/api/Vehicles`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ driverName, plate: formattedPlate, password })
-        });
+        await companyService.createVehicle({ driverName, plate: formattedPlate, password });
       } else {
-        res = await fetch(`${apiBaseUrl}/api/Vehicles/${selectedVehicle.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ driverName, plate: formattedPlate, password: password || null })
-        });
+        await companyService.updateVehicle(selectedVehicle.id, { driverName, plate: formattedPlate, password: password || null });
       }
 
-      if (res.ok) {
-        showToast(
-          vehicleModalType === "add"
-            ? "Sürücü/Araç başarıyla oluşturuldu."
-            : "Sürücü/Araç başarıyla güncellendi."
-        );
-        setShowVehicleModal(false);
-        fetchData();
-      } else {
-        const txt = await res.text();
-        showToast(txt || "Bir hata oluştu.", "error");
-      }
-    } catch (err) {
+      showToast(
+        vehicleModalType === "add"
+          ? "Sürücü/Araç başarıyla oluşturuldu."
+          : "Sürücü/Araç başarıyla güncellendi."
+      );
+      setShowVehicleModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -419,24 +338,14 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
 
   const handleDeleteVehicle = async () => {
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Vehicles/${selectedVehicle.id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (res.ok) {
-        showToast("Sürücü/Araç kaydı başarıyla silindi.");
-        setShowVehicleDeleteModal(false);
-        fetchData();
-      } else {
-        showToast("Silme işlemi sırasında hata oluştu.", "error");
-      }
-    } catch (err) {
+      await companyService.deleteVehicle(selectedVehicle.id);
+      showToast("Sürücü/Araç kaydı başarıyla silindi.");
+      setShowVehicleDeleteModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || "Silme işlemi sırasında hata oluştu.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -449,28 +358,14 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Vehicles/${selectedVehicle.id}/reset-password`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ newPassword })
-      });
-
-      if (res.ok) {
-        showToast("Şoför şifresi başarıyla sıfırlandı.");
-        setShowResetPasswordModal(false);
-      } else {
-        showToast("Şifre güncellenemedi.", "error");
-      }
-    } catch (err) {
+      await companyService.resetVehiclePassword(selectedVehicle.id, newPassword);
+      showToast("Şoför şifresi başarıyla sıfırlandı.");
+      setShowResetPasswordModal(false);
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || "Şifre güncellenemedi.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -510,13 +405,11 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
 
     // Reverse-lookup: find province ID from name
     skipCascadeReset.current = true;
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
     try {
       // Ensure provinces are loaded
       let currentProvinces = provinces;
       if (currentProvinces.length === 0) {
-        const res = await fetch(`${apiBaseUrl}/api/address/provinces`);
-        currentProvinces = await res.json();
+        currentProvinces = await studentService.getProvinces();
         setProvinces(currentProvinces);
       }
 
@@ -527,8 +420,7 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
         setCity(String(matchedProvince.id));
 
         // Fetch districts for this province
-        const resD = await fetch(`${apiBaseUrl}/api/address/provinces/${matchedProvince.id}/districts`);
-        const districtList = await resD.json();
+        const districtList = await studentService.getDistricts(matchedProvince.id);
         setDistricts(districtList);
 
         const matchedDistrict = districtList.find(
@@ -538,8 +430,7 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
           setDistrict(String(matchedDistrict.id));
 
           // Fetch neighborhoods for this district
-          const resN = await fetch(`${apiBaseUrl}/api/address/districts/${matchedDistrict.id}/neighborhoods`);
-          const neighborhoodList = await resN.json();
+          const neighborhoodList = await studentService.getNeighborhoods(matchedDistrict.id);
           setNeighborhoods(neighborhoodList);
 
           const matchedNeighborhood = neighborhoodList.find(
@@ -590,73 +481,39 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+    const studentPayload = {
+      fullName,
+      school: studentSchool,
+      schoolClass,
+      branch: branch || null,
+      city: provinces.find((p: any) => String(p.id) === String(city))?.name || city,
+      district: districts.find((d: any) => String(d.id) === String(district))?.name || district,
+      neighborhood: neighborhoods.find((n: any) => String(n.id) === String(neighborhood))?.name || neighborhood,
+      street,
+      alley,
+      buildingNo,
+      apartmentNo,
+      postalCode: postalCode || null,
+      ...(studentModalType === "add" ? { companyId: getCompanyId() } : {})
+    };
 
     try {
-      let res;
       if (studentModalType === "add") {
-        res = await fetch(`${apiBaseUrl}/api/Students`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            fullName,
-            school: studentSchool,
-            schoolClass,
-            branch: branch || null,
-            city: provinces.find((p: any) => String(p.id) === String(city))?.name || city,
-            district: districts.find((d: any) => String(d.id) === String(district))?.name || district,
-            neighborhood: neighborhoods.find((n: any) => String(n.id) === String(neighborhood))?.name || neighborhood,
-            street,
-            alley,
-            buildingNo,
-            apartmentNo,
-            postalCode: postalCode || null,
-            companyId: getCompanyId()
-          })
-        });
+        await companyService.createStudent(studentPayload);
       } else {
-        res = await fetch(`${apiBaseUrl}/api/Students/${selectedStudent.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            fullName,
-            school: studentSchool,
-            schoolClass,
-            branch: branch || null,
-            city: provinces.find((p: any) => String(p.id) === String(city))?.name || city,
-            district: districts.find((d: any) => String(d.id) === String(district))?.name || district,
-            neighborhood: neighborhoods.find((n: any) => String(n.id) === String(neighborhood))?.name || neighborhood,
-            street,
-            alley,
-            buildingNo,
-            apartmentNo,
-            postalCode: postalCode || null
-          })
-        });
+        await companyService.updateStudent(selectedStudent.id, studentPayload);
       }
 
-      if (res.ok) {
-        showToast(
-          studentModalType === "add"
-            ? "Öğrenci kaydı başarıyla oluşturuldu."
-            : "Öğrenci kaydı başarıyla güncellendi."
-        );
-        setShowStudentModal(false);
-        fetchData();
-      } else {
-        const txt = await res.text();
-        showToast(txt || "Hata oluştu.", "error");
-      }
-    } catch (err) {
+      showToast(
+        studentModalType === "add"
+          ? "Öğrenci kaydı başarıyla oluşturuldu."
+          : "Öğrenci kaydı başarıyla güncellendi."
+      );
+      setShowStudentModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -664,24 +521,14 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
 
   const handleDeleteStudent = async () => {
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Students/${selectedStudent.id}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (res.ok) {
-        showToast("Öğrenci kaydı başarıyla silindi.");
-        setShowStudentDeleteModal(false);
-        fetchData();
-      } else {
-        showToast("Silme işlemi sırasında bir hata oluştu.", "error");
-      }
-    } catch (err) {
+      await companyService.deleteStudent(selectedStudent.id);
+      showToast("Öğrenci kaydı başarıyla silindi.");
+      setShowStudentDeleteModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -694,57 +541,28 @@ export default function CompanyDashboard({ dictionary, lang, user }: CompanyDash
       return;
     }
     setIsSubmitting(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Students/assign`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          studentId: selectedStudent.id,
-          vehicleId: parseInt(selectedVehicleId.toString(), 10)
-        })
-      });
-
-      if (res.ok) {
-        showToast("Öğrenci araca başarıyla atandı.");
-        setShowAssignModal(false);
-        fetchData();
-      } else {
-        const txt = await res.text();
-        showToast(txt || "Atama hatası.", "error");
-      }
-    } catch (err) {
+      await companyService.assignStudent(selectedStudent.id, parseInt(selectedVehicleId.toString(), 10));
+      showToast("Öğrenci araca başarıyla atandı.");
+      setShowAssignModal(false);
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || "Atama hatası.", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleUnassignStudent = async (student: any) => {
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Students/${student.id}/unassign`, {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-
-      if (res.ok) {
-        showToast("Öğrenci araçtan çıkartıldı.");
-        fetchData();
-      } else {
-        showToast("İşlem başarısız oldu.", "error");
-      }
-    } catch (err) {
+      await companyService.unassignStudent(student.id);
+      showToast("Öğrenci araçtan çıkartıldı.");
+      fetchData();
+    } catch (err: any) {
       console.error(err);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(err?.message || dictionary.errorGeneric || "Sistem hatası.", "error");
     }
   };
 

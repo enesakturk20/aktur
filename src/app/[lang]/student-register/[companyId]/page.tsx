@@ -2,6 +2,7 @@ import StudentRegisterForm from "@/components/StudentRegisterForm";
 import { getDictionary } from "../../get-dictionary";
 import { Locale } from "../../i18n-config";
 import { notFound } from "next/navigation";
+import { studentService } from "@/services";
 
 interface StudentRegisterPageProps {
   params: Promise<{
@@ -14,16 +15,9 @@ export default async function StudentRegisterPage({ params }: StudentRegisterPag
   const { lang, companyId } = await params;
   const dictionary = await getDictionary(lang as Locale);
 
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-  
   let company = null;
   try {
-    const res = await fetch(`${apiBaseUrl}/api/students/company-details/${companyId}`, {
-      cache: "no-store",
-    });
-    if (res.ok) {
-      company = await res.json();
-    }
+    company = await studentService.getCompanyDetails(companyId);
   } catch (err) {
     console.error("Error fetching company details on server:", err);
   }

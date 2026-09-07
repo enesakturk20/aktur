@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import { authService } from "@/services";
 
 interface PortalLoginFormProps {
   dictionary: {
@@ -57,8 +58,7 @@ export default function PortalLoginForm({ dictionary }: PortalLoginFormProps) {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("aktur_token");
-    localStorage.removeItem("aktur_user");
+    authService.logout();
     window.location.reload();
   };
 
@@ -68,82 +68,44 @@ export default function PortalLoginForm({ dictionary }: PortalLoginFormProps) {
     setSuccessMsg(null);
     setIsLoading(true);
 
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      let endpoint = "";
-      let payload = {};
-
+      let data;
       if (activeTab === "company") {
         if (!email.trim() || !password.trim()) {
           setErrorMsg(dictionary.errorInvalid);
           setIsLoading(false);
           return;
         }
-        endpoint = `${apiBaseUrl}/api/auth/login`;
-        payload = { email, password };
+        data = await authService.companyLogin(email, password);
       } else {
         if (!plate.trim() || !password.trim()) {
           setErrorMsg(dictionary.errorInvalid);
           setIsLoading(false);
           return;
         }
-        endpoint = `${apiBaseUrl}/api/auth/vehicle-login`;
-        payload = { plate, password };
+        data = await authService.vehicleLogin(plate, password);
       }
-
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        if (response.status === 400 || response.status === 401 || response.status === 404) {
-          setErrorMsg(dictionary.errorInvalid);
-        } else {
-          setErrorMsg(dictionary.errorGeneric);
-        }
-        setIsLoading(false);
-        return;
-      }
-
-      const data = await response.json(); // Expected: { token: string, email: string, name: string }
 
       if (data && data.token) {
-        localStorage.setItem("aktur_token", data.token);
-        
-        // Decode JWT to get the actual role
-        let actualRole = activeTab;
-        try {
-          const payloadBase64 = data.token.split('.')[1];
-          const decodedJson = atob(payloadBase64);
-          const payload = JSON.parse(decodedJson);
-          // Standard claim or custom role claim
-          actualRole = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || payload.role || activeTab;
-        } catch (e) {
-          console.error("Failed to decode token", e);
-        }
-
-        const userObj = {
+        const actualRole = authService.decodeRole(data.token, activeTab);
+        authService.saveSession(data.token, {
           name: data.name,
-          emailOrPlate: data.email,
+          email: data.email,
           role: actualRole,
-        };
-        localStorage.setItem("aktur_user", JSON.stringify(userObj));
+        });
 
         setSuccessMsg(dictionary.successMessage);
-        
-        // Redirect all logins to the unified dashboard
         const lang = pathname.split("/")[1] || "tr";
         router.push(`/${lang}/portal/dashboard`);
       } else {
         setErrorMsg(dictionary.errorGeneric);
       }
-    } catch (err) {
-      setErrorMsg(dictionary.errorGeneric);
+    } catch (err: any) {
+      if (err?.status === 400 || err?.status === 401 || err?.status === 404) {
+        setErrorMsg(dictionary.errorInvalid);
+      } else {
+        setErrorMsg(dictionary.errorGeneric);
+      }
     } finally {
       setIsLoading(false);
     }

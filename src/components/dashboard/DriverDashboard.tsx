@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Sidebar, { MenuItem } from "./ui/Sidebar";
 import TopHeader from "./ui/TopHeader";
+import { driverService } from "@/services";
 
 interface DriverDashboardProps {
   dictionary: any;
@@ -30,22 +31,12 @@ export default function DriverDashboard({ dictionary, lang, user }: DriverDashbo
 
   const fetchPassengers = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("aktur_token");
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
     try {
-      const res = await fetch(`${apiBaseUrl}/api/Students/my-passengers`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setPassengers(data);
-      } else {
-        showToast(dictionary.errorFetch || "Yolcu listesi yüklenirken hata oluştu.", "error");
-      }
+      const data = await driverService.getMyPassengers();
+      setPassengers(data);
     } catch (e) {
       console.error(e);
-      showToast(dictionary.errorGeneric || "Sistem hatası.", "error");
+      showToast(dictionary.errorFetch || "Yolcu listesi yüklenirken hata oluştu.", "error");
     } finally {
       setIsLoading(false);
     }
